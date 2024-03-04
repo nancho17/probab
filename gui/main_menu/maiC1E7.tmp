@@ -1,0 +1,47 @@
+[gd_scene load_steps=4 format=3 uid="uid://bxptrx5an3br4"]
+
+[ext_resource type="Texture2D" uid="uid://6kns7x1swa4k" path="res://assets/textures/text/text-1705614246761.png" id="1_7ec3i"]
+[ext_resource type="Script" path="res://gui/main_menu/main_menu.gd" id="1_lberc"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tnrbj"]
+content_margin_top = 81.0
+
+[node name="MainMenu" type="CanvasLayer"]
+script = ExtResource("1_lberc")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_tnrbj")
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+texture = ExtResource("1_7ec3i")
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/CenterContainer"]
+layout_mode = 2
+
+[node name="PlayButton" type="Button" parent="MarginContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "New Game"
+
+[node name="SettingsButton" type="Button" parent="MarginContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Settings"
+
+[node name="Button3" type="Button" parent="MarginContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Quit"

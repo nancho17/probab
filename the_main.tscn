@@ -1,6 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://bmrajcym35bo5"]
+[gd_scene load_steps=6 format=3 uid="uid://bmrajcym35bo5"]
 
 [ext_resource type="Script" path="res://the_main.gd" id="1_2k1cf"]
+[ext_resource type="Texture2D" uid="uid://crw8h2g88n0jg" path="res://assets/images/s-l1600.jpg" id="2_mfdyn"]
+[ext_resource type="Material" uid="uid://dc8lc6joywmeq" path="res://gui/main_menu/main_menu.tres" id="2_rgxhh"]
+[ext_resource type="Texture2D" uid="uid://bamvfx47v3alf" path="res://assets/img_text/text-1709466195158.png" id="3_jbquv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jg6ft"]
+content_margin_top = 80.0
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -10,3 +16,84 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_2k1cf")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel"]
+self_modulate = Color(0.219608, 0.180392, 0.219608, 0.117647)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_mfdyn")
+stretch_mode = 5
+
+[node name="ColorRect" type="ColorRect" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.7, 0.7, 0.7, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="MenuManager" type="Control" parent="Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/MenuManager"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Panel/MarginContainer/MenuManager/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_jg6ft")
+
+[node name="TextureRect" type="TextureRect" parent="Panel/MarginContainer/MenuManager/MarginContainer/PanelContainer"]
+material = ExtResource("2_rgxhh")
+layout_mode = 2
+size_flags_horizontal = 8
+texture = ExtResource("3_jbquv")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer/MenuManager/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="PlayButton" type="Button" parent="Panel/MarginContainer/MenuManager/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "New Game"
+
+[node name="SettingsButton" type="Button" parent="Panel/MarginContainer/MenuManager/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Settings"
+
+[node name="QuitButton" type="Button" parent="Panel/MarginContainer/MenuManager/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Quit"
