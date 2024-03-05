@@ -1,10 +1,10 @@
 [gd_resource type="StandardMaterial3D" load_steps=6 format=3 uid="uid://ca5id5w12cprn"]
 
-[ext_resource type="Texture2D" uid="uid://vmfa0wdc1t8n" path="res://assets/materials/test_materials/texture_rock_normal.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://c3x34kbl5riq5" path="res://assets/materials/test_materials/texture_rock_depth.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://cyqj8mjgx816d" path="res://assets/materials/test_materials/texture_rock_ao.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://drf5vk54emlea" path="res://assets/materials/test_materials/texture_rock_metal.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://chkhlqxtypsgd" path="res://assets/materials/test_materials/texture_rock_albedo.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://vmfa0wdc1t8n" path="res://assets/test_materials/texture_rock_normal.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://c3x34kbl5riq5" path="res://assets/test_materials/texture_rock_depth.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://cyqj8mjgx816d" path="res://assets/test_materials/texture_rock_ao.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://drf5vk54emlea" path="res://assets/test_materials/texture_rock_metal.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://chkhlqxtypsgd" path="res://assets/test_materials/texture_rock_albedo.png" id="5"]
 
 [resource]
 albedo_texture = ExtResource("5")
@@ -23,4 +23,7 @@ heightmap_min_layers = 4
 heightmap_max_layers = 16
 heightmap_texture = ExtResource("2")
 heightmap_flip_texture = true
+refraction_scale = 0.39
+refraction_texture_channel = 1
+uv1_scale = Vector3(50, 50, 50)
 texture_filter = 5

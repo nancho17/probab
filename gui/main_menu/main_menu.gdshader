@@ -1,5 +1,4 @@
 shader_type canvas_item;
-uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
 
 float random (vec2 st) {
 	return fract(sin(dot(st.xy,vec2(12.9898,78.233)))*43758.5453123);
@@ -13,10 +12,11 @@ vec3 hsv2rgb(vec3 c) {
 
 void fragment() {
 
-	float change_sec = 1.0;
+	float change_sec = 0.1;
 	float x = floor(UV.x);
 	float y = floor(UV.y);
-	vec3 hue = vec3( random(vec2(x * y + x + y + floor(TIME * change_sec  ))), 1.0, 1.0);
+	//vec3 hue = vec3( random(vec2(x * y + x + y + floor(TIME * change_sec ))), 1.0, 1.0);
+	vec3 hue = vec3( ((x * y + x + y + (TIME * change_sec ))), 1.0, 1.0);
 	hue = hsv2rgb(hue);
     COLOR.rgb = hue;
 }

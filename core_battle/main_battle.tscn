@@ -1,9 +1,12 @@
-[gd_scene load_steps=14 format=3 uid="uid://cfr4fywmerau0"]
+[gd_scene load_steps=18 format=3 uid="uid://cfr4fywmerau0"]
 
 [ext_resource type="Script" path="res://core_battle/main_battle.gd" id="1_qxja8"]
+[ext_resource type="Texture2D" uid="uid://2s2kjgtcgrid" path="res://assets/icons/circle-heart-svgrepo-com.svg" id="2_26se4"]
 [ext_resource type="PackedScene" uid="uid://cueakbdb2j5jq" path="res://core_battle/dices/seis/dice_six.tscn" id="2_ss0ja"]
+[ext_resource type="Texture2D" uid="uid://dyqa25n4b5en2" path="res://assets/icons/crosshair-simple-svgrepo-com.svg" id="3_7j1p3"]
 [ext_resource type="Material" uid="uid://bv6dr534vwcr1" path="res://assets/test_materials/ice.tres" id="3_64qmf"]
-[ext_resource type="Material" uid="uid://c5oxndmf0jbu3" path="res://assets/test_materials/marble.tres" id="3_alnwu"]
+[ext_resource type="Material" uid="uid://ca5id5w12cprn" path="res://assets/test_materials/stones.tres" id="3_k17fr"]
+[ext_resource type="Texture2D" uid="uid://bvu50dcdkcmhw" path="res://assets/icons/dialpad-circle-svgrepo-com.svg" id="4_63fj0"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_u8dr5"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -15,11 +18,11 @@ sky_material = SubResource("ProceduralSkyMaterial_u8dr5")
 [sub_resource type="Environment" id="Environment_ioefw"]
 background_mode = 2
 sky = SubResource("Sky_2vxmh")
-tonemap_mode = 2
-glow_enabled = true
+reflected_light_source = 2
+tonemap_mode = 1
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ehos4"]
-material = ExtResource("3_alnwu")
+material = ExtResource("3_k17fr")
 size = Vector2(200, 200)
 subdivide_width = 20
 subdivide_depth = 20
@@ -27,32 +30,372 @@ subdivide_depth = 20
 [sub_resource type="BoxShape3D" id="BoxShape3D_hteve"]
 size = Vector3(100, 2, 100)
 
-[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ytt2m"]
-plane = Plane(0, 0, 1, 0)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_cofij"]
 size = Vector3(2, 100, 100)
 
 [sub_resource type="BoxMesh" id="BoxMesh_hr5l0"]
 material = ExtResource("3_64qmf")
-size = Vector3(1, 10, 10)
+size = Vector3(1, 10, 15)
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ytt2m"]
+plane = Plane(0, 0, 1, 0)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_6bg8j"]
 plane = Plane(1, 0, 0, 0)
 
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_xqfte"]
+plane = Plane(0, 0, -1, 0)
+
 [node name="MainBattle" type="Node3D"]
 script = ExtResource("1_qxja8")
 
+[node name="Timer" type="Timer" parent="."]
+
+[node name="MainGui" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+
+[node name="PlayerData" type="MarginContainer" parent="MainGui"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -182.0
+offset_right = 171.0
+offset_bottom = 182.0
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="MainGui/PlayerData"]
+layout_mode = 2
+
+[node name="InMarginContainer" type="MarginContainer" parent="MainGui/PlayerData"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainGui/PlayerData/InMarginContainer"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="MainGui/PlayerData/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Player Nan"
+
+[node name="LifePoints" type="Label" parent="MainGui/PlayerData/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Life Points"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainGui/PlayerData/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MainGui/PlayerData/InMarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_26se4")
+expand_mode = 3
+
+[node name="Label" type="Label" parent="MainGui/PlayerData/InMarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "24"
+
+[node name="Attack" type="Label" parent="MainGui/PlayerData/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Attack Dice"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MainGui/PlayerData/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MainGui/PlayerData/InMarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("3_7j1p3")
+expand_mode = 3
+
+[node name="Label" type="Label" parent="MainGui/PlayerData/InMarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "2"
+
+[node name="Evade" type="Label" parent="MainGui/PlayerData/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Evade Dice"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MainGui/PlayerData/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MainGui/PlayerData/InMarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+texture = ExtResource("4_63fj0")
+expand_mode = 3
+
+[node name="Label" type="Label" parent="MainGui/PlayerData/InMarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "1"
+
+[node name="RollButton" type="Button" parent="MainGui/PlayerData/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Roll
+"
+
+[node name="EnemyData" type="MarginContainer" parent="MainGui"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -181.0
+offset_top = -182.0
+offset_bottom = 182.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="MainGui/EnemyData"]
+layout_mode = 2
+
+[node name="InMarginContainer" type="MarginContainer" parent="MainGui/EnemyData"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainGui/EnemyData/InMarginContainer"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="MainGui/EnemyData/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Enemy LV1"
+
+[node name="LifePoints" type="Label" parent="MainGui/EnemyData/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Life Points"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainGui/EnemyData/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MainGui/EnemyData/InMarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_26se4")
+expand_mode = 3
+
+[node name="Label" type="Label" parent="MainGui/EnemyData/InMarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "24"
+
+[node name="Attack" type="Label" parent="MainGui/EnemyData/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Attack Dice"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MainGui/EnemyData/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MainGui/EnemyData/InMarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("3_7j1p3")
+expand_mode = 3
+
+[node name="Label" type="Label" parent="MainGui/EnemyData/InMarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "2"
+
+[node name="Evade" type="Label" parent="MainGui/EnemyData/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Evade Dice"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MainGui/EnemyData/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MainGui/EnemyData/InMarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+texture = ExtResource("4_63fj0")
+expand_mode = 3
+
+[node name="Label" type="Label" parent="MainGui/EnemyData/InMarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "1"
+
+[node name="RollButton" type="Button" parent="MainGui/EnemyData/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Roll
+"
+
+[node name="Entropy" type="MarginContainer" parent="MainGui"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -49.5
+offset_top = -69.0
+offset_right = 49.5
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainGui/Entropy"]
+layout_mode = 2
+
+[node name="Entropy" type="Label" parent="MainGui/Entropy/VBoxContainer"]
+layout_mode = 2
+text = "Entropy D3"
+
+[node name="MarginContainer" type="MarginContainer" parent="MainGui/Entropy/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="ProgressBar" type="ProgressBar" parent="MainGui/Entropy/VBoxContainer/MarginContainer"]
+custom_minimum_size = Vector2(0, 25.16)
+layout_mode = 2
+size_flags_vertical = 3
+max_value = 50.0
+value = 10.0
+show_percentage = false
+
+[node name="Tresh" type="Label" parent="MainGui/Entropy/VBoxContainer"]
+layout_mode = 2
+text = "Roll 0 : 10"
+
+[node name="PlayerPlay" type="MarginContainer" parent="."]
+offset_right = 202.0
+offset_bottom = 156.0
+size_flags_horizontal = 0
+
+[node name="DiceContainer" type="HBoxContainer" parent="PlayerPlay"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme_override_constants/separation = 10
+
+[node name="ResultStage" type="MarginContainer" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -101.0
+offset_top = -78.0
+offset_right = 101.0
+offset_bottom = 78.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Panel" type="Panel" parent="ResultStage"]
+layout_mode = 2
+
+[node name="InMarginContainer" type="MarginContainer" parent="ResultStage"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ResultStage/InMarginContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Result"
+
+[node name="Life" type="HBoxContainer" parent="ResultStage/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 10
+
+[node name="Playa" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Life"]
+layout_mode = 2
+text = "Life Result"
+
+[node name="PResult" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Life"]
+layout_mode = 2
+text = "22"
+
+[node name="Icon" type="TextureRect" parent="ResultStage/InMarginContainer/VBoxContainer/Life"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("2_26se4")
+expand_mode = 5
+stretch_mode = 4
+
+[node name="Enemy" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Life"]
+layout_mode = 2
+text = "Life Points"
+
+[node name="EResult" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Life"]
+layout_mode = 2
+text = "22"
+
+[node name="Attack" type="HBoxContainer" parent="ResultStage/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 10
+
+[node name="Player" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Attack"]
+layout_mode = 2
+text = "Attack 14"
+
+[node name="PResult" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Attack"]
+layout_mode = 2
+text = "22"
+
+[node name="Attack" type="TextureRect" parent="ResultStage/InMarginContainer/VBoxContainer/Attack"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("3_7j1p3")
+expand_mode = 5
+
+[node name="Enemy" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Attack"]
+layout_mode = 2
+text = "Attack 14"
+
+[node name="EResult" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Attack"]
+layout_mode = 2
+text = "22"
+
+[node name="Evade" type="HBoxContainer" parent="ResultStage/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 10
+
+[node name="Playa" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Evade"]
+layout_mode = 2
+text = "Evade"
+
+[node name="PResult" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Evade"]
+layout_mode = 2
+text = "22"
+
+[node name="Evade" type="TextureRect" parent="ResultStage/InMarginContainer/VBoxContainer/Evade"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("4_63fj0")
+expand_mode = 5
+
+[node name="Enemy" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Evade"]
+layout_mode = 2
+text = "Evade"
+
+[node name="EResult" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Evade"]
+layout_mode = 2
+text = "22"
+
+[node name="AceptStage" type="Button" parent="ResultStage/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Acept"
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.826798, -0.487139, 0.281248, -1.49013e-08, 0.499998, 0.866027, -0.562499, -0.716029, 0.413397, 0, 0, 0)
-light_energy = 0.0
+light_energy = 0.301
 shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_ioefw")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.614781, 0.788698, 0, -0.788698, 0.614781, 0, 11.9114, 7.72482)
+transform = Transform3D(1, 0, 0, 0, 0.71934, 0.694658, 0, -0.694658, 0.71934, 0, 11, 10.5)
 
 [node name="Floor" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_ehos4")
@@ -64,13 +407,6 @@ collision_mask = 3
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
 shape = SubResource("BoxShape3D_hteve")
 
-[node name="StaticBody3D4" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13.7075)
-shape = SubResource("WorldBoundaryShape3D_ytt2m")
-
 [node name="Separator" type="StaticBody3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Separator"]
@@ -79,24 +415,48 @@ shape = SubResource("BoxShape3D_cofij")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Separator"]
 mesh = SubResource("BoxMesh_hr5l0")
 
-[node name="StaticBody3D2" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.1792, 0, 0)
+[node name="StaticBody3DBack" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.30423, 0, 0)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3DBack"]
+shape = SubResource("WorldBoundaryShape3D_ytt2m")
+
+[node name="StaticBody3DLeft" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.65744, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3DLeft"]
 shape = SubResource("WorldBoundaryShape3D_6bg8j")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D2"]
+[node name="StaticBody3DFront" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3DFront"]
+shape = SubResource("WorldBoundaryShape3D_xqfte")
 
 [node name="Player" type="Node3D" parent="."]
 
-[node name="leseis_1" parent="Player" instance=ExtResource("2_ss0ja")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 3, 0)
+[node name="D6_1" parent="Player" instance=ExtResource("2_ss0ja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3, 0)
 
-[node name="leseis_2" parent="Player" instance=ExtResource("2_ss0ja")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3, 0)
+[node name="D6_2" parent="Player" instance=ExtResource("2_ss0ja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3, 3)
 
-[node name="leseis_3" parent="Player" instance=ExtResource("2_ss0ja")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3, 0)
+[node name="D6_3" parent="Player" instance=ExtResource("2_ss0ja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 3, -3)
+
+[node name="D6_4" parent="Player" instance=ExtResource("2_ss0ja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 3, -3)
+
+[node name="Enemy2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.1091, 0, 0)
+
+[node name="leseis_1" parent="Enemy2" instance=ExtResource("2_ss0ja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3, 0)
+
+[node name="leseis_2" parent="Enemy2" instance=ExtResource("2_ss0ja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3, 3)
+
+[node name="leseis_3" parent="Enemy2" instance=ExtResource("2_ss0ja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 3, -3)
 
 [node name="Enemy" type="Node3D" parent="."]

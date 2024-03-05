@@ -11,21 +11,25 @@ config_version=5
 [application]
 
 config/name="Acerol Game"
+config/tags=PackedStringArray("jammed")
 run/main_scene="res://the_main.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 
-[display]
+[editor]
 
-window/size/viewport_width=800
-window/size/viewport_height=600
+movie_writer/movie_file="C:/Users/herda/intentos/capture.avi"
 
 [file_customization]
 
 folder_colors={
-"res://core_battle/": "yellow",
+"res://core_battle/": "orange",
 "res://gui/": "pink"
 }
+
+[gui]
+
+theme/custom="res://gui/main_theme.tres"
 
 [input]
 
