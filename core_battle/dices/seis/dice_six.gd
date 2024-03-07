@@ -20,6 +20,9 @@ func _ready():
 
 	body_entered.connect(collided_effect)
 
+func set_dice_material(a_material : Material ):
+	dice_mesh.set_surface_override_material(0,a_material)
+
 func set_mode(a_mode : bool ):
 	mode = a_mode
 	if mode:
@@ -36,7 +39,7 @@ func get_dice_val() -> String:
 
 func has_been_rolled():
 	get_dice_val()
-	print(name," has a :" , current_val)
+	#print(name," has a :" , current_val)
 
 func collided_effect(_a_body : Node):
 	dice_audio.play()
