@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://bmrajcym35bo5"]
+[gd_scene load_steps=7 format=3 uid="uid://bmrajcym35bo5"]
 
-[ext_resource type="Script" path="res://the_main.gd" id="1_2k1cf"]
+[ext_resource type="Script" path="res://the_main.gd" id="1_57m0e"]
+[ext_resource type="AudioStream" uid="uid://bdgbpem36f1f" path="res://assets/soundtrack/mainmenu.wav" id="2_aianr"]
 [ext_resource type="Texture2D" uid="uid://crw8h2g88n0jg" path="res://assets/images/s-l1600.jpg" id="2_mfdyn"]
 [ext_resource type="Material" uid="uid://dc8lc6joywmeq" path="res://gui/main_menu/main_menu.tres" id="2_rgxhh"]
-[ext_resource type="Texture2D" uid="uid://bamvfx47v3alf" path="res://assets/img_text/text-1709466195158.png" id="3_jbquv"]
+[ext_resource type="Texture2D" uid="uid://bamvfx47v3alf" path="res://assets/img_text/titleuan.png" id="5_26ted"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jg6ft"]
 content_margin_top = 80.0
@@ -15,7 +16,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_2k1cf")
+script = ExtResource("1_57m0e")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_aianr")
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1
@@ -76,7 +80,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_jg6ft")
 material = ExtResource("2_rgxhh")
 layout_mode = 2
 size_flags_horizontal = 8
-texture = ExtResource("3_jbquv")
+texture = ExtResource("5_26ted")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer/MenuManager/MarginContainer"]
 layout_mode = 2

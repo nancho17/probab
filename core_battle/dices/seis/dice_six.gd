@@ -2,18 +2,19 @@ extends RigidBody3D
 @onready var rays = $Rays as Node3D
 @onready var dice_audio = $DiceAudio as AudioStreamPlayer3D
 @onready var dice_mesh = $DiceMesh
+@export var mode : bool = true
 
 const REDRIVER = preload("res://core_battle/dices/seis/attack_number.tres")
 const GREENLIGHT = preload("res://core_battle/dices/seis/evade_number.tres")
+const dice_max : int = 6
 
 var dice_inital_pos : Vector3
 var rays_array : Array[Node]
 var current_val : int
 var self_button : Button
-var mode : bool
 
 func _ready():
-	set_mode(true)
+	set_mode(mode)
 	dice_inital_pos = get_global_position()
 	rays_array = rays.get_children()
 	sleeping_state_changed.connect(has_been_rolled)

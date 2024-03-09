@@ -1,0 +1,157 @@
+[gd_scene load_steps=5 format=3 uid="uid://oucnua8amyi3"]
+
+[ext_resource type="Script" path="res://core_battle/gui_battle/self_data.gd" id="1_ux126"]
+[ext_resource type="Texture2D" uid="uid://2s2kjgtcgrid" path="res://assets/icons/circle-heart-svgrepo-com.svg" id="2_y0b6k"]
+[ext_resource type="Texture2D" uid="uid://dyqa25n4b5en2" path="res://assets/icons/crosshair-simple-svgrepo-com.svg" id="3_yygxg"]
+[ext_resource type="Texture2D" uid="uid://bvu50dcdkcmhw" path="res://assets/icons/dialpad-circle-svgrepo-com.svg" id="4_7erh7"]
+
+[node name="PlayerData" type="MarginContainer"]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -86.0
+offset_right = 171.0
+offset_bottom = 86.0
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_ux126")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 2
+
+[node name="InMarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/margin_left = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="InMarginContainer"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="InMarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Player"
+
+[node name="LifePoints" type="Label" parent="InMarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Life Points"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="InMarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="InMarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_y0b6k")
+expand_mode = 3
+
+[node name="LifePointsValue" type="Label" parent="InMarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "24"
+
+[node name="Attack" type="Label" parent="InMarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+text = "Attack Dice"
+
+[node name="DiceSymbols" type="VBoxContainer" parent="InMarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HB1" type="HBoxContainer" parent="InMarginContainer/VBoxContainer/DiceSymbols"]
+layout_mode = 2
+
+[node name="1" type="TextureRect" parent="InMarginContainer/VBoxContainer/DiceSymbols/HB1"]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("3_yygxg")
+expand_mode = 3
+
+[node name="2" type="TextureRect" parent="InMarginContainer/VBoxContainer/DiceSymbols/HB1"]
+visible = false
+layout_mode = 2
+texture = ExtResource("3_yygxg")
+expand_mode = 3
+
+[node name="3" type="TextureRect" parent="InMarginContainer/VBoxContainer/DiceSymbols/HB1"]
+visible = false
+layout_mode = 2
+texture = ExtResource("3_yygxg")
+expand_mode = 3
+
+[node name="HB2" type="HBoxContainer" parent="InMarginContainer/VBoxContainer/DiceSymbols"]
+layout_mode = 2
+
+[node name="4" type="TextureRect" parent="InMarginContainer/VBoxContainer/DiceSymbols/HB2"]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("3_yygxg")
+expand_mode = 3
+
+[node name="5" type="TextureRect" parent="InMarginContainer/VBoxContainer/DiceSymbols/HB2"]
+visible = false
+layout_mode = 2
+texture = ExtResource("3_yygxg")
+expand_mode = 3
+
+[node name="6" type="TextureRect" parent="InMarginContainer/VBoxContainer/DiceSymbols/HB2"]
+visible = false
+layout_mode = 2
+texture = ExtResource("3_yygxg")
+expand_mode = 3
+
+[node name="Evade" type="Label" parent="InMarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+text = "Evade Dice"
+
+[node name="EvadeSymbols" type="VBoxContainer" parent="InMarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HB1" type="HBoxContainer" parent="InMarginContainer/VBoxContainer/EvadeSymbols"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="InMarginContainer/VBoxContainer/EvadeSymbols/HB1"]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("4_7erh7")
+expand_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="InMarginContainer/VBoxContainer/EvadeSymbols/HB1"]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("4_7erh7")
+expand_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="InMarginContainer/VBoxContainer/EvadeSymbols/HB1"]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("4_7erh7")
+expand_mode = 3
+
+[node name="HB2" type="HBoxContainer" parent="InMarginContainer/VBoxContainer/EvadeSymbols"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="InMarginContainer/VBoxContainer/EvadeSymbols/HB2"]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("4_7erh7")
+expand_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="InMarginContainer/VBoxContainer/EvadeSymbols/HB2"]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("4_7erh7")
+expand_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="InMarginContainer/VBoxContainer/EvadeSymbols/HB2"]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("4_7erh7")
+expand_mode = 3
