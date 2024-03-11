@@ -7,22 +7,21 @@ extends Node3D
 @onready var roll_button = $MainGui/Lebutton/HB2/MarginContainer/VBoxContainer/RollButton
 @onready var lebutton = $MainGui/Lebutton
 
-
+#Roll Panel
 @onready var title_type_roll = $MainGui/Lebutton/HB2/MarginContainer/VBoxContainer/TypeRoll
 @onready var who_type_roll = $MainGui/Lebutton/HB2/MarginContainer/VBoxContainer/HB1/Who
 @onready var does_type_roll = $MainGui/Lebutton/HB2/MarginContainer/VBoxContainer/HB1/Does
 @onready var roll_left = $MainGui/Lebutton/HB2/Left
 @onready var roll_right = $MainGui/Lebutton/HB2/Right
 
-
-@onready var dice_attack_container = $PlayerPlay/VBoxContainer/DiceContainer
-@onready var dice_evade_container = $PlayerPlay/VBoxContainer/DiceContainer2
-
-@onready var timer = $Timer
+#Result Panel
 @onready var result_stage = $ResultStage
 @onready var acept_stage = $ResultStage/InMarginContainer/VBoxContainer/AceptStage
+@onready var negative_val = $ResultStage/InMarginContainer/VBoxContainer/Calulated/NegativeVal
+
 @onready var end_game_opt = $EndGameOpt
 
+@onready var timer = $Timer
 @onready var player = $Player/Dices as Node
 @onready var enemy = $Enemy as Node
 
@@ -31,8 +30,19 @@ extends Node3D
 
 @onready var entropy_bar = $MainGui/Entropy/VBoxContainer/MarginContainer/ProgressBar  as TextureProgressBar
 
+@onready var left_text_name = $ResultStage/InMarginContainer/VBoxContainer/Labels/Left
+@onready var left_text_score = $ResultStage/InMarginContainer/VBoxContainer/Labels/LeftScore
+@onready var left_score_symbol = $ResultStage/InMarginContainer/VBoxContainer/Labels/LSymbol
+
+@onready var right_text_name = $ResultStage/InMarginContainer/VBoxContainer/Labels/Right
+@onready var right_text_score = $ResultStage/InMarginContainer/VBoxContainer/Labels/RightScore
+@onready var right_score_symbol = $ResultStage/InMarginContainer/VBoxContainer/Labels/RSymbol
+
+
 const ATTACK_ICON = preload("res://assets/icons/crosshair-simple-svgrepo-com.svg")
 const EVADE_ICON = preload("res://assets/icons/dialpad-circle-svgrepo-com.svg")
+const DEFENSE_ICON = preload("res://assets/icons/shield-alt-svgrepo-com.svg")
+
 const ROCK = preload("res://assets/test_materials/rock.tres")
 
 var enemy_dice_array : Array[Node]
@@ -58,6 +68,8 @@ var attacker_p : Node
 
 var defender_array : Array[Node]
 var attacker_array : Array[Node]
+
+var physic_array_dice : Array[RigidBody3D]
 
 func _ready():
 	roll_button.pressed.connect(roll_phase)
@@ -85,12 +97,24 @@ func _ready():
 	
 	set_roles_phase()
 	set_defense_phase()
-	
-	#acept_destiny()
+
 
 func _physics_process(_delta):
+	if  !physic_array_dice.is_empty():
+		for i in range(physic_array_dice.size()):
+			roll_da_dice_physic(physic_array_dice.pop_back())
+
 	if Input.is_action_just_pressed("b_launch"):
 		roll_all()
+
+func swap_roles():
+	var swapper = defender_p
+	defender_p = attacker_p
+	attacker_p = swapper
+	
+	var swapper_array = defender_array
+	defender_array = attacker_array
+	attacker_array = swapper_array
 
 func set_roles_phase():
 	defender_p = player_data
@@ -104,8 +128,16 @@ func set_defense_phase():
 	who_type_roll.text = defender_p.get_player_name()
 	does_type_roll.text = " defends"
 
+	roll_right.set_texture(DEFENSE_ICON)
+	roll_left.set_texture(DEFENSE_ICON)
+
 	roll_right.set_visible(defender_p.get_side())
 	roll_left.set_visible(!defender_p.get_side())
+	
+	for dice in enemy_dice_array:
+		dice.dice_disable()
+	for dice in dice_array:
+		dice.dice_disable()
 
 	lebutton.set_visible(true)
 
@@ -115,17 +147,48 @@ func set_attack_phase():
 	who_type_roll.text = attacker_p.get_player_name()
 	does_type_roll.text = " attacks"
 
+	roll_right.set_texture(ATTACK_ICON)
+	roll_left.set_texture(ATTACK_ICON)
+
 	roll_right.set_visible(attacker_p.get_side())
 	roll_left.set_visible(!attacker_p.get_side())
 
 	lebutton.set_visible(true)
 
-
-
 func acept_destiny():
-	var defender_updated_life = defender_p.get_life_points_value_int()- min(defender_p.get_score() - attacker_p.get_score(),0)
-	defender_p.set_life_points_value_int(defender_updated_life)
+	print("Restart Stage")
+	battle_phase = phase_step.PHASE_FIRST
 	result_stage.set_visible(false)
+	defender_p.hide_score()
+	attacker_p.hide_score()
+	swap_roles()
+	set_defense_phase()
+
+func conclude_stage():
+	var delta_life = min(defender_p.get_score() - attacker_p.get_score(),0)
+	var defender_updated_life = defender_p.get_life_points_value_int() + delta_life
+	defender_p.set_life_points_value_int(defender_updated_life)
+	negative_val.text = String.num_int64(delta_life)
+
+	var left_p : Node
+	var right_p : Node
+
+	if defender_p.get_side():
+		right_p = defender_p
+		left_p = attacker_p
+	else:
+		right_p = attacker_p
+		left_p = defender_p
+
+	left_text_name.text = left_p.get_player_name()
+	left_text_score.text = left_p.get_score_text()
+	left_score_symbol.texture = left_p.get_score_symbol()
+
+	right_text_name.text = right_p.get_player_name()
+	right_text_score.text = right_p.get_score_text()
+	right_score_symbol.texture = right_p.get_score_symbol()
+
+	result_stage.set_visible(true)
 	sound_alert.play()
 
 	if defender_updated_life <= 0:
@@ -136,7 +199,7 @@ func acept_destiny():
 		return
 
 	battle_phase = phase_step.PHASE_FIRST
-	lebutton.set_visible(true)
+	#lebutton.set_visible(true)
 
 
 func rested_dice():
@@ -153,27 +216,28 @@ func rested_dice():
 func _on_timer_timeout():
 	match battle_phase:
 		phase_step.PHASE_FIRST:
-			prints(self,"PHASE_FIRST")
+			prints(self,"timeout","PHASE_FIRST")
 		phase_step.PHASE_SECOND:
 			rested_dice()
 		phase_step.PHASE_THIRD:
-			rested_dice()
+			prints(self,"timeout","PHASE_THIRD")
 		phase_step.PHASE_FOURTH:
-			prints(self,"PHASE_FOURTH")
+			rested_dice()
 		_:
-			prints(self,"PHASE TOTAL FAIL")
+			prints(self,"timeout","PHASE TOTAL FAIL")
 
 func roll_phase():
 	match battle_phase:
 		phase_step.PHASE_FIRST:
-			prints(self,"PHASE_FIRST")
+			prints(self,"roll_phase","PHASE_FIRST")
 			lebutton.set_visible(false)
 			battle_phase = phase_step.PHASE_SECOND
 			for dice in defender_array:
 				roll_da_dice(dice)
 		phase_step.PHASE_THIRD:
+			prints(self,"roll_phase","PHASE_THIRD")
 			lebutton.set_visible(false)
-			battle_phase = phase_step.PHASE_SECOND
+			battle_phase = phase_step.PHASE_FOURTH
 			for dice in attacker_array:
 				roll_da_dice(dice)
 		_:
@@ -185,21 +249,14 @@ func roll_phase():
 
 
 func roll_all():
-	if battle_phase != phase_step.PHASE_FIRST:
-		return
 
-	lebutton.set_visible(false)
-
-	battle_phase = phase_step.PHASE_SECOND
 	for dice in dice_array:
+		dice.visible = true
 		roll_da_dice(dice)
 
 	for dice in enemy_dice_array:
 		roll_da_dice(dice)
 
-	timer.set_wait_time(2.0)
-	timer.set_one_shot(true)
-	timer.start()
 
 func dice_rested()->bool:
 	for dice in enemy_dice_array:
@@ -214,46 +271,35 @@ func dice_rested()->bool:
 
 
 func result_calc_stage():
+	var score : int = 0
+	for dice in defender_array:
+		prints ( dice.name,": ",dice.get_dice_val().to_int())
+		score += dice.get_dice_val().to_int()
+
+	defender_p.set_score(score)
+	defender_p.set_score_type(score_type.SCORE_DEFENSE)
+	prints("score setted PA", score)
+
+	score = 0
+	for dice in attacker_array:
+		prints ( dice.name,": ",dice.get_dice_val().to_int())
+		score += dice.get_dice_val().to_int()
+
 	match battle_phase:
 		phase_step.PHASE_SECOND:
-			var score : int = 0
-			for dice in defender_array:
-				prints ( dice.name,": ",dice.get_dice_val().to_int())
-				score += dice.get_dice_val().to_int()
-			defender_p.set_score(score)
-			defender_p.set_score_type(score_type.SCORE_DEFENSE)
-			prints("score setted PA", score)
 			set_attack_phase()
+		phase_step.PHASE_FOURTH:
+			attacker_p.set_score(score)
+			attacker_p.set_score_type(score_type.SCORE_ATTACK)
+			conclude_stage()
 		_:
 			return
 
-	#for dice in enemy_dice_array:
-		#if dice.mode:
-			#enemy_stage_val[stage_val.ATTACK] += dice.get_dice_val().to_int()
-		#else:
-			#enemy_stage_val[stage_val.EVADE] += dice.get_dice_val().to_int()
-
-
-
-	for dice in dice_array:
-		var text_val : String= dice.get_dice_val()
-		#var text_mode : String = ("a") if (dice.mode) else ("e")
-
-
-
-func roll_one_from_selected(dice : RigidBody3D):
-	print(battle_phase)
-	result_stage.set_visible(false)
-	roll_da_dice(dice)
-	timer.set_wait_time(2.0)
-	timer.set_one_shot(true)
-	timer.start()
-	
-	entropy_bar.value +=1
-	#Add aberrati
-
-
 func roll_da_dice(a_dice : RigidBody3D):
+	physic_array_dice.append(a_dice)
+
+func roll_da_dice_physic(a_dice : RigidBody3D):
+	a_dice.dice_enable()
 	const max_vel_angular = 40
 	const max_vel_linear = 15
 

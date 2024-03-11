@@ -2,6 +2,7 @@ extends RigidBody3D
 @onready var rays = $Rays as Node3D
 @onready var dice_audio = $DiceAudio as AudioStreamPlayer3D
 @onready var dice_mesh = $DiceMesh
+@onready var dice_collision = $DiceCollision
 @export var mode : bool = true
 
 const REDRIVER = preload("res://core_battle/dices/seis/attack_number.tres")
@@ -44,3 +45,14 @@ func has_been_rolled():
 
 func collided_effect(_a_body : Node):
 	dice_audio.play()
+
+func dice_disable():
+	set_visible(false)
+	set_freeze_enabled(true)
+	set_sleeping(true)
+	dice_collision.set_disabled(true)
+
+func dice_enable():
+	set_visible(true)
+	set_freeze_enabled(false)
+	dice_collision.set_disabled(false)
