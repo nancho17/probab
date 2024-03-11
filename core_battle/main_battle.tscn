@@ -6,25 +6,12 @@
 [ext_resource type="PackedScene" uid="uid://cueakbdb2j5jq" path="res://core_battle/dices/seis/dice_six.tscn" id="2_ss0ja"]
 [ext_resource type="Texture2D" uid="uid://dyqa25n4b5en2" path="res://assets/icons/crosshair-simple-svgrepo-com.svg" id="3_7j1p3"]
 [ext_resource type="Material" uid="uid://bv6dr534vwcr1" path="res://assets/test_materials/ice.tres" id="3_64qmf"]
-[ext_resource type="Material" uid="uid://ca5id5w12cprn" path="res://assets/test_materials/stones.tres" id="3_k17fr"]
 [ext_resource type="Texture2D" uid="uid://bvu50dcdkcmhw" path="res://assets/icons/dialpad-circle-svgrepo-com.svg" id="4_63fj0"]
 [ext_resource type="Script" path="res://core_battle/gui_battle/result_stage.gd" id="5_dv0co"]
 [ext_resource type="Script" path="res://core_battle/gui_battle/end_game_opt.gd" id="6_4ghvo"]
+[ext_resource type="Material" uid="uid://b5s7rqy823muv" path="res://assets/custrom_materials/brownleatheer.tres" id="8_n5ruj"]
 [ext_resource type="AudioStream" uid="uid://4duc8akwn08r" path="res://assets/sounds/resslts.wav" id="10_c5a44"]
-
-[sub_resource type="Gradient" id="Gradient_xlnjd"]
-offsets = PackedFloat32Array(1)
-colors = PackedColorArray(1, 1, 1, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_vwcvw"]
-gradient = SubResource("Gradient_xlnjd")
-
-[sub_resource type="Gradient" id="Gradient_lufc3"]
-offsets = PackedFloat32Array(0.00162338, 1)
-colors = PackedColorArray(1.38376e-07, 0.30266, 0.147736, 1, 0.62, 0.289333, 0, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_uj2dk"]
-gradient = SubResource("Gradient_lufc3")
+[ext_resource type="PackedScene" uid="uid://clyxdfcrb04nh" path="res://core_battle/tokens/hearts.tscn" id="11_6cxql"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_u8dr5"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -40,23 +27,30 @@ reflected_light_source = 2
 tonemap_mode = 1
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ehos4"]
-material = ExtResource("3_k17fr")
+material = ExtResource("8_n5ruj")
 size = Vector2(200, 200)
 subdivide_width = 20
 subdivide_depth = 20
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_tnnjy"]
+absorbent = true
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_hteve"]
 size = Vector3(100, 2, 100)
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ytt2m"]
+plane = Plane(0, 0, 1, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_i65j5"]
+material = ExtResource("3_64qmf")
+size = Vector3(40, 10, 0.4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cofij"]
 size = Vector3(2, 100, 100)
 
 [sub_resource type="BoxMesh" id="BoxMesh_hr5l0"]
 material = ExtResource("3_64qmf")
-size = Vector3(1, 10, 40)
-
-[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ytt2m"]
-plane = Plane(0, 0, 1, 0)
+size = Vector3(0.4, 10, 40)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_c4saa"]
 plane = Plane(1, 0, 0, 0)
@@ -66,6 +60,10 @@ plane = Plane(0, 0, -1, 0)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_6bg8j"]
 plane = Plane(-1, 0, 0, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_if8js"]
+material = ExtResource("3_64qmf")
+size = Vector3(0.4, 10, 40)
 
 [node name="MainBattle" type="Node3D"]
 script = ExtResource("1_qxja8")
@@ -81,102 +79,87 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MainGui"]
-layout_mode = 2
-offset_left = 10.0
-offset_top = 152.0
-offset_right = 171.0
-offset_bottom = 496.0
+[node name="Lebutton" type="MarginContainer" parent="MainGui"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -85.5
+offset_top = -32.0
+offset_right = 85.5
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="PlayerData" parent="MainGui/VBoxContainer" instance=ExtResource("2_h167a")]
+[node name="Panel" type="Panel" parent="MainGui/Lebutton"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MainGui/VBoxContainer"]
+[node name="HB2" type="HBoxContainer" parent="MainGui/Lebutton"]
 layout_mode = 2
 
-[node name="RollButton" type="Button" parent="MainGui/VBoxContainer/MarginContainer"]
+[node name="Left" type="TextureRect" parent="MainGui/Lebutton/HB2"]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-text = "Roll
+texture = ExtResource("2_26se4")
+expand_mode = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="MainGui/Lebutton/HB2"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainGui/Lebutton/HB2/MarginContainer"]
+layout_mode = 2
+
+[node name="TypeRoll" type="Label" parent="MainGui/Lebutton/HB2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Defense!"
+
+[node name="HB1" type="HBoxContainer" parent="MainGui/Lebutton/HB2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Who" type="Label" parent="MainGui/Lebutton/HB2/MarginContainer/VBoxContainer/HB1"]
+layout_mode = 2
+text = "Player"
+
+[node name="Does" type="Label" parent="MainGui/Lebutton/HB2/MarginContainer/VBoxContainer/HB1"]
+layout_mode = 2
+text = "Defends"
+
+[node name="RollButton" type="Button" parent="MainGui/Lebutton/HB2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Roll!
 "
+
+[node name="Right" type="TextureRect" parent="MainGui/Lebutton/HB2"]
+layout_mode = 2
+texture = ExtResource("2_26se4")
+expand_mode = 3
+
+[node name="PlayerData" parent="MainGui" instance=ExtResource("2_h167a")]
+layout_mode = 1
+anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
+offset_top = 0.0
+offset_right = 250.0
+offset_bottom = 142.0
+grow_vertical = 1
 
 [node name="EnemyData" parent="MainGui" instance=ExtResource("2_h167a")]
 layout_mode = 1
-anchors_preset = 6
+anchors_preset = 1
 anchor_left = 1.0
+anchor_top = 0.0
 anchor_right = 1.0
-offset_left = -181.0
+anchor_bottom = 0.0
+offset_left = -250.0
+offset_top = 0.0
 offset_right = 0.0
+offset_bottom = 142.0
 grow_horizontal = 0
-
-[node name="Entropy" type="MarginContainer" parent="MainGui"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -49.5
-offset_top = -69.0
-offset_right = 49.5
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MainGui/Entropy"]
-layout_mode = 2
-
-[node name="Entropy" type="Label" parent="MainGui/Entropy/VBoxContainer"]
-layout_mode = 2
-text = "Entropy D20"
-
-[node name="MarginContainer" type="MarginContainer" parent="MainGui/Entropy/VBoxContainer"]
-layout_mode = 2
-
-[node name="ProgressBar" type="TextureProgressBar" parent="MainGui/Entropy/VBoxContainer/MarginContainer"]
-layout_mode = 2
-max_value = 25.0
-nine_patch_stretch = true
-texture_under = SubResource("GradientTexture1D_vwcvw")
-texture_progress = SubResource("GradientTexture1D_uj2dk")
-
-[node name="Tresh" type="Label" parent="MainGui/Entropy/VBoxContainer/MarginContainer"]
-layout_mode = 2
-text = "God does not play dice"
-
-[node name="Tresh2" type="Label" parent="MainGui/Entropy/VBoxContainer"]
-layout_mode = 2
-text = "Roll 0 : 10"
-
-[node name="PlayerPlay" type="MarginContainer" parent="."]
-offset_right = 202.0
-offset_bottom = 156.0
-size_flags_horizontal = 0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="PlayerPlay"]
-layout_mode = 2
-
-[node name="DiceContainer" type="HBoxContainer" parent="PlayerPlay/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
-theme_override_constants/separation = 10
-
-[node name="AttackIcon" type="TextureRect" parent="PlayerPlay/VBoxContainer/DiceContainer"]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-texture = ExtResource("3_7j1p3")
-expand_mode = 3
-
-[node name="DiceContainer2" type="HBoxContainer" parent="PlayerPlay/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
-theme_override_constants/separation = 10
-
-[node name="EvadeIcon" type="TextureRect" parent="PlayerPlay/VBoxContainer/DiceContainer2"]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-texture = ExtResource("4_63fj0")
-expand_mode = 3
+grow_vertical = 1
 
 [node name="ResultStage" type="MarginContainer" parent="."]
 visible = false
@@ -185,10 +168,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -101.0
-offset_top = -128.0
-offset_right = 101.0
-offset_bottom = 128.0
+offset_left = -228.0
+offset_top = -84.0
+offset_right = 228.0
+offset_bottom = 84.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
@@ -200,6 +183,8 @@ layout_mode = 2
 
 [node name="InMarginContainer" type="MarginContainer" parent="ResultStage"]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_constants/margin_left = 10
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ResultStage/InMarginContainer"]
@@ -208,97 +193,45 @@ layout_mode = 2
 [node name="Title" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-text = "Result"
+text = "Dice Results"
 
-[node name="Life" type="HBoxContainer" parent="ResultStage/InMarginContainer/VBoxContainer"]
+[node name="Labels" type="HBoxContainer" parent="ResultStage/InMarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/separation = 15
 
-[node name="Playa" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Life"]
-visible = false
+[node name="Left" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Labels"]
 layout_mode = 2
-text = "Life Result"
+text = "Player"
 
-[node name="PResult" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Life"]
+[node name="LeftScore" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Labels"]
 layout_mode = 2
-text = "22"
+text = "24"
 
-[node name="Icon" type="TextureRect" parent="ResultStage/InMarginContainer/VBoxContainer/Life"]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-texture = ExtResource("2_26se4")
-expand_mode = 5
-stretch_mode = 4
-
-[node name="Enemy" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Life"]
-visible = false
-layout_mode = 2
-text = "Life Points"
-
-[node name="EResult" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Life"]
-layout_mode = 2
-text = "22"
-
-[node name="Attack" type="HBoxContainer" parent="ResultStage/InMarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_constants/separation = 15
-
-[node name="Player" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Attack"]
-visible = false
-layout_mode = 2
-text = "Attack 14"
-
-[node name="PResult" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Attack"]
-layout_mode = 2
-text = "22"
-
-[node name="Attack" type="TextureRect" parent="ResultStage/InMarginContainer/VBoxContainer/Attack"]
+[node name="LSymbol" type="TextureRect" parent="ResultStage/InMarginContainer/VBoxContainer/Labels"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("3_7j1p3")
 expand_mode = 5
 
-[node name="Enemy" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Attack"]
-visible = false
+[node name="VS" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Labels"]
 layout_mode = 2
-text = "Attack 14"
+text = "V.S."
 
-[node name="EResult" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Attack"]
-layout_mode = 2
-text = "22"
-
-[node name="Evade" type="HBoxContainer" parent="ResultStage/InMarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 15
-
-[node name="Playa" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Evade"]
-visible = false
-layout_mode = 2
-text = "Evade"
-
-[node name="PResult" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Evade"]
-layout_mode = 2
-text = "22"
-
-[node name="Evade" type="TextureRect" parent="ResultStage/InMarginContainer/VBoxContainer/Evade"]
+[node name="RSymbol" type="TextureRect" parent="ResultStage/InMarginContainer/VBoxContainer/Labels"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("4_63fj0")
+texture = ExtResource("3_7j1p3")
 expand_mode = 5
 
-[node name="Enemy" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Evade"]
-visible = false
-layout_mode = 2
-text = "Evade"
-
-[node name="EResult" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Evade"]
+[node name="RightScore" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Labels"]
 layout_mode = 2
 text = "22"
+
+[node name="Right" type="Label" parent="ResultStage/InMarginContainer/VBoxContainer/Labels"]
+layout_mode = 2
+text = "Player"
 
 [node name="AceptStage" type="Button" parent="ResultStage/InMarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -348,6 +281,57 @@ text = "Next Enemy"
 layout_mode = 2
 text = "Main Menu"
 
+[node name="Chaos" type="MarginContainer" parent="."]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -96.5
+offset_top = -120.0
+offset_right = 96.5
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 0
+size_flags_vertical = 4
+script = ExtResource("5_dv0co")
+
+[node name="Panel" type="Panel" parent="Chaos"]
+layout_mode = 2
+
+[node name="InMarginContainer" type="MarginContainer" parent="Chaos"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Chaos/InMarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Title" type="Label" parent="Chaos/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Aberration Dice"
+
+[node name="Attack" type="HBoxContainer" parent="Chaos/InMarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 15
+
+[node name="Attack" type="TextureRect" parent="Chaos/InMarginContainer/VBoxContainer/Attack"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("4_63fj0")
+expand_mode = 5
+
+[node name="Result" type="Label" parent="Chaos/InMarginContainer/VBoxContainer/Attack"]
+layout_mode = 2
+text = "6"
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.826798, -0.487139, 0.281248, -1.49013e-08, 0.499998, 0.866027, -0.562499, -0.716029, 0.413397, 0, 0, 0)
 light_energy = 0.301
@@ -357,76 +341,154 @@ shadow_enabled = true
 environment = SubResource("Environment_ioefw")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.481769, 0.876298, 0, -0.876298, 0.481769, 0, 12.5607, 6.69452)
+transform = Transform3D(1, 0, 0, 0, 0.322266, 0.946649, 0, -0.946649, 0.322266, 0, 5.54447, 3.13532)
 
 [node name="Floor" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_ehos4")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 collision_layer = 3
 collision_mask = 3
+physics_material_override = SubResource("PhysicsMaterial_tnnjy")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
 shape = SubResource("BoxShape3D_hteve")
 
-[node name="Separator" type="StaticBody3D" parent="."]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Separator"]
-shape = SubResource("BoxShape3D_cofij")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Separator"]
-mesh = SubResource("BoxMesh_hr5l0")
-
 [node name="StaticBody3DBack" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3DBack"]
 shape = SubResource("WorldBoundaryShape3D_ytt2m")
 
-[node name="StaticBody3DLeft" type="StaticBody3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3DBack"]
+mesh = SubResource("BoxMesh_i65j5")
+skeleton = NodePath("../../Separator")
+
+[node name="Separator" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.6, 0, 0)
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Separator"]
+shape = SubResource("BoxShape3D_cofij")
+
+[node name="StaticBody3DLeft" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3DLeft"]
+mesh = SubResource("BoxMesh_hr5l0")
+skeleton = NodePath("../../Separator")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3DLeft"]
 shape = SubResource("WorldBoundaryShape3D_c4saa")
 
 [node name="StaticBody3DFront" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3DFront"]
 shape = SubResource("WorldBoundaryShape3D_xqfte")
 
 [node name="StaticBody3DRight" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.6, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3DRight"]
 shape = SubResource("WorldBoundaryShape3D_6bg8j")
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3DRight"]
+mesh = SubResource("BoxMesh_if8js")
+skeleton = NodePath("../../Separator")
+
 [node name="Player" type="Node3D" parent="."]
 
-[node name="D6_1" parent="Player" instance=ExtResource("2_ss0ja")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3, 0)
+[node name="Dices" type="Node3D" parent="Player"]
 
-[node name="D6_2" parent="Player" instance=ExtResource("2_ss0ja")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3, 3)
+[node name="D6_1" parent="Player/Dices" instance=ExtResource("2_ss0ja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, 0)
 
-[node name="D6_3" parent="Player" instance=ExtResource("2_ss0ja")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 3, -3)
-mode = false
+[node name="D6_2" parent="Player/Dices" instance=ExtResource("2_ss0ja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, 2)
+
+[node name="D6_3" parent="Player/Dices" instance=ExtResource("2_ss0ja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, -2)
+
+[node name="Tokens" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.99166)
+
+[node name="Heart" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -3.52391, 1.68526, -1.39685)
+
+[node name="Heart2" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -3.88539, 3.27034, 0.97571)
+
+[node name="Heart3" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -2.57378, 1.68526, -1.39685)
+
+[node name="Heart4" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -3.67148, 1.68526, -0.334511)
+
+[node name="Heart5" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -2.44309, 1.68526, -0.334511)
+
+[node name="Heart11" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -3.52391, 2.92071, -1.39685)
+
+[node name="Heart12" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -3.31011, 3.29151, -0.382199)
+
+[node name="Heart13" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -2.57378, 2.92071, -1.39685)
+
+[node name="Heart14" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -3.67148, 2.92071, -0.334511)
+
+[node name="Heart15" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -2.44309, 2.92071, -0.334511)
+
+[node name="Heart16" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -3.52391, 2.92071, 1.03954)
+
+[node name="Heart17" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -3.47907, 2.92071, -0.11522)
+
+[node name="Heart18" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -3.76282, 3.36297, -2.27575)
+
+[node name="Heart19" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -3.67148, 2.92071, 2.10188)
+
+[node name="Heart20" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -3.63213, 3.36297, -1.21341)
+
+[node name="Heart6" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -3.42042, 1.68526, 0.495017)
+
+[node name="Heart7" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -1.73607, 1.68526, -1.39685)
+
+[node name="Heart8" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -3.48143, 3.47034, -3.74575)
+
+[node name="Heart9" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -1.73607, 1.68526, -1.39685)
+
+[node name="Heart10" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -2.96718, 2.98643, 3.17797)
 
 [node name="Enemy" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.1091, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
 
 [node name="leseis_1" parent="Enemy" instance=ExtResource("2_ss0ja")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, 0)
+mode = false
 
 [node name="leseis_2" parent="Enemy" instance=ExtResource("2_ss0ja")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, 2)
+mode = false
 
 [node name="leseis_3" parent="Enemy" instance=ExtResource("2_ss0ja")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 3, -3)
-
-[node name="leseis_4" parent="Enemy" instance=ExtResource("2_ss0ja")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.49086, 3, -3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, -2)
+mode = false
 
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 10, 0)

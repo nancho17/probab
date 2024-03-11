@@ -2,7 +2,19 @@ extends Node3D
 
 @onready var sound_alert = $SoundEff as AudioStreamPlayer3D
 
-@onready var roll_button = $MainGui/VBoxContainer/MarginContainer/RollButton
+##PHASE BUTTON Make single scene?
+
+@onready var roll_button = $MainGui/Lebutton/HB2/MarginContainer/VBoxContainer/RollButton
+@onready var lebutton = $MainGui/Lebutton
+
+
+@onready var title_type_roll = $MainGui/Lebutton/HB2/MarginContainer/VBoxContainer/TypeRoll
+@onready var who_type_roll = $MainGui/Lebutton/HB2/MarginContainer/VBoxContainer/HB1/Who
+@onready var does_type_roll = $MainGui/Lebutton/HB2/MarginContainer/VBoxContainer/HB1/Does
+@onready var roll_left = $MainGui/Lebutton/HB2/Left
+@onready var roll_right = $MainGui/Lebutton/HB2/Right
+
+
 @onready var dice_attack_container = $PlayerPlay/VBoxContainer/DiceContainer
 @onready var dice_evade_container = $PlayerPlay/VBoxContainer/DiceContainer2
 
@@ -11,10 +23,10 @@ extends Node3D
 @onready var acept_stage = $ResultStage/InMarginContainer/VBoxContainer/AceptStage
 @onready var end_game_opt = $EndGameOpt
 
-@onready var player = $Player as Node
+@onready var player = $Player/Dices as Node
 @onready var enemy = $Enemy as Node
 
-@onready var player_data = $MainGui/VBoxContainer/PlayerData
+@onready var player_data = $MainGui/PlayerData
 @onready var enemy_data = $MainGui/EnemyData
 
 @onready var entropy_bar = $MainGui/Entropy/VBoxContainer/MarginContainer/ProgressBar  as TextureProgressBar
@@ -29,14 +41,10 @@ var dice_array : Array[Node]
 var dice_actions : Dictionary
 var battle_phase : int
 
-enum stage_val {
-	LIFE,
-	ATTACK,
-	EVADE,
+enum score_type {
+	SCORE_DEFENSE,
+	SCORE_ATTACK,
 	};
-
-var player_stage_val : Array[int] = [24, 0, 0]
-var enemy_stage_val : Array[int] = [24, 0, 0]
 
 enum phase_step {
 	PHASE_FIRST,
@@ -45,103 +53,143 @@ enum phase_step {
 	PHASE_FOURTH
 	};
 
+var defender_p : Node
+var attacker_p : Node
+
+var defender_array : Array[Node]
+var attacker_array : Array[Node]
+
 func _ready():
-	roll_button.pressed.connect(roll_all)
+	roll_button.pressed.connect(roll_phase)
 	timer.timeout.connect(_on_timer_timeout)
 	acept_stage.pressed.connect(acept_destiny)
-	
-	battle_phase = phase_step.PHASE_FIRST
 
-	player_stage_val[stage_val.LIFE] = 24
-	enemy_stage_val[stage_val.LIFE] = 24
 
+	player_data.set_life_points_value_int(20)
+	enemy_data.set_life_points_value_int(20)
+
+	player_data.label_set_name("Nancho!")
 	enemy_data.label_set_name("Enemy Lv 1")
+
+	player_data.set_side(false)
+	enemy_data.set_side(true)
+
 	enemy_dice_array = enemy.get_children()
 	for e_dice in enemy_dice_array:
 		e_dice.set_dice_material(ROCK)
-		if e_dice.mode:
-			enemy_data.gui_add_attack_dice()
-			#dice_attack_container.add_child(e_dice.self_button)
-		else:
-			enemy_data.gui_add_evade_dice()
-			#dice_evade_container.add_child(e_dice.self_button)
 
 	dice_array = player.get_children()
-	for dice in dice_array:
-		dice.self_button = Button.new()
-		dice.self_button.pressed.connect(roll_one_from_selected.bind(dice)) # Not in physics process
-		dice.self_button.text = dice.name
-		dice.self_button.set_focus_mode(Control.FocusMode.FOCUS_NONE)
-		dice.self_button.set_disabled(true)
-		
-		if dice.mode:
-			player_data.gui_add_attack_dice()
-			dice_attack_container.add_child(dice.self_button)
-		else:
-			player_data.gui_add_evade_dice()
-			dice_evade_container.add_child(dice.self_button)
+
+	lebutton.visible = true
 	
-	set_button_dice_values()
-	acept_destiny()
+	
+	set_roles_phase()
+	set_defense_phase()
+	
+	#acept_destiny()
 
 func _physics_process(_delta):
 	if Input.is_action_just_pressed("b_launch"):
 		roll_all()
 
+func set_roles_phase():
+	defender_p = player_data
+	attacker_p = enemy_data
+	defender_array = dice_array
+	attacker_array = enemy_dice_array
+
+func set_defense_phase():
+	battle_phase = phase_step.PHASE_FIRST
+	title_type_roll.text = "DEFENSE!"
+	who_type_roll.text = defender_p.get_player_name()
+	does_type_roll.text = " defends"
+
+	roll_right.set_visible(defender_p.get_side())
+	roll_left.set_visible(!defender_p.get_side())
+
+	lebutton.set_visible(true)
+
+func set_attack_phase():
+	battle_phase = phase_step.PHASE_THIRD
+	title_type_roll.text = "ATTACK!"
+	who_type_roll.text = attacker_p.get_player_name()
+	does_type_roll.text = " attacks"
+
+	roll_right.set_visible(attacker_p.get_side())
+	roll_left.set_visible(!attacker_p.get_side())
+
+	lebutton.set_visible(true)
+
+
+
 func acept_destiny():
-	for dice in dice_array:
-		dice.self_button.set_disabled(true)
-
-	var delta = min(player_stage_val[stage_val.EVADE] - enemy_stage_val[stage_val.ATTACK],0) 
-	player_stage_val[stage_val.LIFE] += delta
-
-	delta = min(enemy_stage_val[stage_val.EVADE] - player_stage_val[stage_val.ATTACK],0) 
-	enemy_stage_val[stage_val.LIFE]+= delta
-	
-	player_data.set_life_points_value_int(player_stage_val[stage_val.LIFE])
-	enemy_data.set_life_points_value_int(enemy_stage_val[stage_val.LIFE])
-
-
+	var defender_updated_life = defender_p.get_life_points_value_int()- min(defender_p.get_score() - attacker_p.get_score(),0)
+	defender_p.set_life_points_value_int(defender_updated_life)
 	result_stage.set_visible(false)
 	sound_alert.play()
 
-	if player_stage_val[stage_val.LIFE] <= 0:
+	if defender_updated_life <= 0:
 		end_game_opt.lost_option()
+		#end_game_opt.victory_option()
 		battle_phase = phase_step.PHASE_THIRD
-		print("Enemy Victory")
+		print("Attacker Victory")
 		return
 
-	if enemy_stage_val[stage_val.LIFE] <= 0:
-		end_game_opt.victory_option()
-		battle_phase = phase_step.PHASE_THIRD
-		print("Player Victory")
-		return
+	battle_phase = phase_step.PHASE_FIRST
+	lebutton.set_visible(true)
 
-	battle_phase= phase_step.PHASE_FIRST
-	roll_button.set_disabled(false)
+
+func rested_dice():
+	if dice_rested():
+		prints("dice_rested")
+		result_calc_stage()
+	else:
+		print("Not yet capo")
+		timer.set_wait_time(2.0)
+		timer.set_one_shot(true)
+		timer.start()
+
 
 func _on_timer_timeout():
 	match battle_phase:
 		phase_step.PHASE_FIRST:
 			prints(self,"PHASE_FIRST")
 		phase_step.PHASE_SECOND:
-			if dice_rested():
-				prints(self,"PHASE_SECOND")
-				result_calc_stage()
-			else:
-				print("Not yet capo")
-				timer.set_wait_time(2.0)
-				timer.set_one_shot(true)
-				timer.start()
+			rested_dice()
 		phase_step.PHASE_THIRD:
-				prints(self,"PHASE_THIRD")
+			rested_dice()
+		phase_step.PHASE_FOURTH:
+			prints(self,"PHASE_FOURTH")
 		_:
 			prints(self,"PHASE TOTAL FAIL")
+
+func roll_phase():
+	match battle_phase:
+		phase_step.PHASE_FIRST:
+			prints(self,"PHASE_FIRST")
+			lebutton.set_visible(false)
+			battle_phase = phase_step.PHASE_SECOND
+			for dice in defender_array:
+				roll_da_dice(dice)
+		phase_step.PHASE_THIRD:
+			lebutton.set_visible(false)
+			battle_phase = phase_step.PHASE_SECOND
+			for dice in attacker_array:
+				roll_da_dice(dice)
+		_:
+			return
+
+	timer.set_wait_time(2.0)
+	timer.set_one_shot(true)
+	timer.start()
+
 
 func roll_all():
 	if battle_phase != phase_step.PHASE_FIRST:
 		return
-	roll_button.set_disabled(true)
+
+	lebutton.set_visible(false)
+
 	battle_phase = phase_step.PHASE_SECOND
 	for dice in dice_array:
 		roll_da_dice(dice)
@@ -164,46 +212,33 @@ func dice_rested()->bool:
 
 	return true
 
+
 func result_calc_stage():
-	set_button_dice_values()
-	var p_future =  player_stage_val.duplicate()
-	var e_future = enemy_stage_val.duplicate()
-	
-	var delta = min(player_stage_val[stage_val.EVADE] - enemy_stage_val[stage_val.ATTACK],0) 
-	p_future[stage_val.LIFE] = player_stage_val[stage_val.LIFE] + delta
+	match battle_phase:
+		phase_step.PHASE_SECOND:
+			var score : int = 0
+			for dice in defender_array:
+				prints ( dice.name,": ",dice.get_dice_val().to_int())
+				score += dice.get_dice_val().to_int()
+			defender_p.set_score(score)
+			defender_p.set_score_type(score_type.SCORE_DEFENSE)
+			prints("score setted PA", score)
+			set_attack_phase()
+		_:
+			return
 
-	delta = min(enemy_stage_val[stage_val.EVADE] - player_stage_val[stage_val.ATTACK],0) 
-	e_future[stage_val.LIFE] = enemy_stage_val[stage_val.LIFE] + delta
+	#for dice in enemy_dice_array:
+		#if dice.mode:
+			#enemy_stage_val[stage_val.ATTACK] += dice.get_dice_val().to_int()
+		#else:
+			#enemy_stage_val[stage_val.EVADE] += dice.get_dice_val().to_int()
 
-	print(player_stage_val[stage_val.LIFE])
-	print(p_future[stage_val.LIFE])
 
-	result_stage.set_player_values(p_future)
-	result_stage.set_enemy_values(e_future)
-	result_stage.set_visible(true)
-
-func set_button_dice_values():
-	player_stage_val[stage_val.ATTACK] = 0
-	enemy_stage_val[stage_val.ATTACK] = 0
-	player_stage_val[stage_val.EVADE] = 0
-	enemy_stage_val[stage_val.EVADE] = 0
-
-	for dice in enemy_dice_array:
-		if dice.mode:
-			enemy_stage_val[stage_val.ATTACK] += dice.get_dice_val().to_int()
-		else:
-			enemy_stage_val[stage_val.EVADE] += dice.get_dice_val().to_int()
 
 	for dice in dice_array:
-		dice.self_button.set_disabled(false)
-		if dice.mode:
-			player_stage_val[stage_val.ATTACK] += dice.get_dice_val().to_int()
-		else:
-			player_stage_val[stage_val.EVADE] += dice.get_dice_val().to_int()
-
 		var text_val : String= dice.get_dice_val()
 		#var text_mode : String = ("a") if (dice.mode) else ("e")
-		dice.self_button.text = dice.name + ": " + text_val
+
 
 
 func roll_one_from_selected(dice : RigidBody3D):
