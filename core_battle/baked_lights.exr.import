@@ -1,0 +1,26 @@
+[remap]
+
+importer="2d_array_texture"
+type="CompressedTexture2DArray"
+uid="uid://ldx1k1r6w8b4"
+path="res://.godot/imported/baked_lights.exr-553e7c1cc5da4ee9f61bea85ba137946.ctexarray"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://core_battle/baked_lights.exr"
+dest_files=["res://.godot/imported/baked_lights.exr-553e7c1cc5da4ee9f61bea85ba137946.ctexarray"]
+
+[params]
+
+compress/mode=3
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/channel_pack=1
+mipmaps/generate=false
+mipmaps/limit=-1
+slices/horizontal=1
+slices/vertical=2

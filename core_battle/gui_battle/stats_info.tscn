@@ -192,7 +192,6 @@ texture = ExtResource("2_y0b6k")
 expand_mode = 3
 
 [node name="Entropy" type="MarginContainer" parent="InMarginContainer/VBoxContainer"]
-visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="InMarginContainer/VBoxContainer/Entropy"]
@@ -203,28 +202,10 @@ layout_mode = 2
 text = "Chaos Counter
 "
 
-[node name="HB2" type="HBoxContainer" parent="InMarginContainer/VBoxContainer/Entropy/VBoxContainer"]
+[node name="ChaosContainer" type="HBoxContainer" parent="InMarginContainer/VBoxContainer/Entropy/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-
-[node name="TextureRect1" type="TextureRect" parent="InMarginContainer/VBoxContainer/Entropy/VBoxContainer/HB2"]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-texture = ExtResource("4_7erh7")
-expand_mode = 3
-
-[node name="TextureRect2" type="TextureRect" parent="InMarginContainer/VBoxContainer/Entropy/VBoxContainer/HB2"]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-texture = ExtResource("4_7erh7")
-expand_mode = 3
-
-[node name="TextureRect3" type="TextureRect" parent="InMarginContainer/VBoxContainer/Entropy/VBoxContainer/HB2"]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-texture = ExtResource("4_7erh7")
-expand_mode = 3
 
 [node name="Score" type="MarginContainer" parent="InMarginContainer/VBoxContainer"]
 visible = false

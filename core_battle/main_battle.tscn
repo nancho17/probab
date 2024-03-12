@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://cfr4fywmerau0"]
+[gd_scene load_steps=36 format=3 uid="uid://cfr4fywmerau0"]
 
 [ext_resource type="Script" path="res://core_battle/main_battle.gd" id="1_qxja8"]
 [ext_resource type="Texture2D" uid="uid://2s2kjgtcgrid" path="res://assets/icons/circle-heart-svgrepo-com.svg" id="2_26se4"]
@@ -12,6 +12,11 @@
 [ext_resource type="Material" uid="uid://b5s7rqy823muv" path="res://assets/custrom_materials/brownleatheer.tres" id="8_n5ruj"]
 [ext_resource type="AudioStream" uid="uid://4duc8akwn08r" path="res://assets/sounds/resslts.wav" id="10_c5a44"]
 [ext_resource type="PackedScene" uid="uid://clyxdfcrb04nh" path="res://core_battle/tokens/hearts.tscn" id="11_6cxql"]
+[ext_resource type="Script" path="res://core_battle/agents/Chaos.gd" id="12_hcp80"]
+[ext_resource type="Material" uid="uid://cs8eysbagjtw1" path="res://assets/custrom_materials/aberration_material/aberr_material.tres" id="13_6wqg0"]
+[ext_resource type="Shader" path="res://assets/custrom_materials/aberration_material/coloraberr.gdshader" id="14_knhwl"]
+[ext_resource type="Material" uid="uid://c5r68watkeubw" path="res://assets/custrom_materials/aberration_material/aberration_number.tres" id="15_x0wxx"]
+[ext_resource type="LightmapGIData" uid="uid://ce6f1bn0ww14g" path="res://core_battle/baked_lights.lmbake" id="17_a6ilj"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_u8dr5"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -23,16 +28,29 @@ sky_material = SubResource("ProceduralSkyMaterial_u8dr5")
 [sub_resource type="Environment" id="Environment_ioefw"]
 background_mode = 2
 sky = SubResource("Sky_2vxmh")
-reflected_light_source = 2
 tonemap_mode = 1
+ssr_enabled = true
+ssao_horizon = 1.0
+ssao_light_affect = 0.22
+ssao_ao_channel_affect = 1.0
+sdfgi_enabled = true
+sdfgi_min_cell_size = 1.6
+sdfgi_y_scale = 0
+glow_enabled = true
+glow_normalized = true
+glow_intensity = 0.4
+glow_strength = 0.5
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ehos4"]
+lightmap_size_hint = Vector2i(1002, 1002)
 material = ExtResource("8_n5ruj")
+add_uv2 = true
 size = Vector2(200, 200)
 subdivide_width = 20
 subdivide_depth = 20
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_tnnjy"]
+rough = true
 absorbent = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hteve"]
@@ -42,14 +60,18 @@ size = Vector3(100, 2, 100)
 plane = Plane(0, 0, 1, 0)
 
 [sub_resource type="BoxMesh" id="BoxMesh_i65j5"]
+lightmap_size_hint = Vector2i(206, 306)
 material = ExtResource("3_64qmf")
+add_uv2 = true
 size = Vector3(40, 10, 0.4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cofij"]
 size = Vector3(2, 100, 100)
 
 [sub_resource type="BoxMesh" id="BoxMesh_hr5l0"]
+lightmap_size_hint = Vector2i(206, 306)
 material = ExtResource("3_64qmf")
+add_uv2 = true
 size = Vector3(0.4, 10, 40)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_c4saa"]
@@ -62,8 +84,26 @@ plane = Plane(0, 0, -1, 0)
 plane = Plane(-1, 0, 0, 0)
 
 [sub_resource type="BoxMesh" id="BoxMesh_if8js"]
+lightmap_size_hint = Vector2i(206, 306)
 material = ExtResource("3_64qmf")
+add_uv2 = true
 size = Vector3(0.4, 10, 40)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wlh88"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_d7whd"]
+radius = 1.0
+height = 2.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wbqrl"]
+render_priority = 0
+shader = ExtResource("14_knhwl")
+shader_parameter/r_displacement = Vector2(3, 0)
+shader_parameter/g_displacement = Vector2(0, 0)
+shader_parameter/b_displacement = Vector2(-3, 0)
+
+[sub_resource type="PrismMesh" id="PrismMesh_5in85"]
+size = Vector3(0.485, 0.1, 0.335)
 
 [node name="MainBattle" type="Node3D"]
 script = ExtResource("1_qxja8")
@@ -302,7 +342,7 @@ text = "Next Enemy"
 layout_mode = 2
 text = "Main Menu"
 
-[node name="Chaos" type="MarginContainer" parent="."]
+[node name="ChaosPanel" type="MarginContainer" parent="."]
 visible = false
 anchors_preset = 7
 anchor_left = 0.5
@@ -318,38 +358,38 @@ size_flags_horizontal = 0
 size_flags_vertical = 4
 script = ExtResource("5_dv0co")
 
-[node name="Panel" type="Panel" parent="Chaos"]
+[node name="Panel" type="Panel" parent="ChaosPanel"]
 layout_mode = 2
 
-[node name="InMarginContainer" type="MarginContainer" parent="Chaos"]
+[node name="InMarginContainer" type="MarginContainer" parent="ChaosPanel"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/margin_left = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Chaos/InMarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ChaosPanel/InMarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Title" type="Label" parent="Chaos/InMarginContainer/VBoxContainer"]
+[node name="Title" type="Label" parent="ChaosPanel/InMarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Aberration Dice"
 
-[node name="Attack" type="HBoxContainer" parent="Chaos/InMarginContainer/VBoxContainer"]
+[node name="Attack" type="HBoxContainer" parent="ChaosPanel/InMarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/separation = 15
 
-[node name="Attack" type="TextureRect" parent="Chaos/InMarginContainer/VBoxContainer/Attack"]
+[node name="Attack" type="TextureRect" parent="ChaosPanel/InMarginContainer/VBoxContainer/Attack"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("4_63fj0")
 expand_mode = 5
 
-[node name="Result" type="Label" parent="Chaos/InMarginContainer/VBoxContainer/Attack"]
+[node name="Result" type="Label" parent="ChaosPanel/InMarginContainer/VBoxContainer/Attack"]
 layout_mode = 2
 text = "6"
 
@@ -362,7 +402,7 @@ shadow_enabled = true
 environment = SubResource("Environment_ioefw")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.322266, 0.946649, 0, -0.946649, 0.322266, 0, 5.54447, 3.13532)
+transform = Transform3D(1, 0, 0, 0, 0.320795, 0.947149, 0, -0.947149, 0.320795, 0, 6.19089, 3.13532)
 
 [node name="Floor" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_ehos4")
@@ -417,6 +457,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
 shape = SubResource("WorldBoundaryShape3D_6bg8j")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3DRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0, 0)
 mesh = SubResource("BoxMesh_if8js")
 skeleton = NodePath("../../Separator")
 
@@ -511,17 +552,55 @@ mode = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, -2)
 mode = false
 
-[node name="SpotLight3D" type="SpotLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 10, 0)
-light_color = Color(1, 0.686275, 0.0117647, 1)
-light_energy = 16.0
-light_indirect_energy = 16.0
-light_volumetric_fog_energy = 16.0
-light_size = 0.206
-spot_range = 25.543
-spot_attenuation = 3.60501
+[node name="falsedice" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.12435, 9.32724)
+visible = false
+mesh = SubResource("BoxMesh_wlh88")
+skeleton = NodePath("../Chaos")
+surface_material_override/0 = ExtResource("13_6wqg0")
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="falsedice"]
+light_energy = 8.0
+light_negative = true
+light_specular = 1.0
+omni_range = 2.0
+
+[node name="abersphere" type="MeshInstance3D" parent="falsedice"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.92, 0, 0)
+mesh = SubResource("SphereMesh_d7whd")
+skeleton = NodePath("../../Chaos")
+surface_material_override/0 = SubResource("ShaderMaterial_wbqrl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="falsedice"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.547831, 0.0565863)
+mesh = SubResource("PrismMesh_5in85")
+surface_material_override/0 = ExtResource("15_x0wxx")
+
+[node name="Chaos" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.12435, 13.5637)
+script = ExtResource("12_hcp80")
+
+[node name="AberrationDice" parent="Chaos" instance=ExtResource("2_ss0ja")]
+dice_material = ExtResource("13_6wqg0")
+dice_numbers_material = ExtResource("15_x0wxx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Chaos/AberrationDice"]
+visible = false
+mesh = SubResource("SphereMesh_d7whd")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_wbqrl")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Chaos/AberrationDice"]
+light_energy = 8.0
+light_negative = true
+light_specular = 1.0
+omni_range = 2.0
 
 [node name="SoundEff" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 3)
 stream = ExtResource("10_c5a44")
 max_polyphony = 10
+
+[node name="LightmapGI" type="LightmapGI" parent="."]
+quality = 2
+light_data = ExtResource("17_a6ilj")

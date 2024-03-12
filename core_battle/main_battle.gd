@@ -24,6 +24,7 @@ extends Node3D
 @onready var timer = $Timer
 @onready var player = $Player/Dices as Node
 @onready var enemy = $Enemy as Node
+@onready var chaos = $Chaos
 
 @onready var player_data = $MainGui/PlayerData
 @onready var enemy_data = $MainGui/EnemyData
@@ -47,6 +48,7 @@ const ROCK = preload("res://assets/test_materials/rock.tres")
 
 var enemy_dice_array : Array[Node]
 var dice_array : Array[Node]
+var chaos_dice_array : Array[Node]
 
 var dice_actions : Dictionary
 var battle_phase : int
@@ -57,10 +59,11 @@ enum score_type {
 	};
 
 enum phase_step {
-	PHASE_FIRST,
-	PHASE_SECOND,
-	PHASE_THIRD,
-	PHASE_FOURTH
+	PHASE_DEFENSE,
+	PHASE_DEFENSE_CHAOS,
+	#PHASE_SECOND,
+	PHASE_ATTACK,
+	PHASE_ATTACK_CHAOS
 	};
 
 var defender_p : Node
@@ -72,10 +75,21 @@ var attacker_array : Array[Node]
 var physic_array_dice : Array[RigidBody3D]
 
 func _ready():
+	#get_viewport().msaa_3d = Viewport.MSAA_DISABLED
+	#get_viewport().use_taa = false
+	#get_viewport().use_debanding = false
+	#get_viewport().screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
+	#get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR2
+	
+	#get_viewport().debug_draw = Viewport.DEBUG_DRAW_OVERDRAW
+	#get_viewport().debug_draw = Viewport.DEBUG_DRAW_WIREFRAME
+	 
+
 	roll_button.pressed.connect(roll_phase)
 	timer.timeout.connect(_on_timer_timeout)
 	acept_stage.pressed.connect(acept_destiny)
 
+	chaos_dice_array = chaos.get_children()
 
 	player_data.set_life_points_value_int(20)
 	enemy_data.set_life_points_value_int(20)
@@ -85,7 +99,7 @@ func _ready():
 
 	player_data.set_side(false)
 	enemy_data.set_side(true)
-
+	
 	enemy_dice_array = enemy.get_children()
 	for e_dice in enemy_dice_array:
 		e_dice.set_dice_material(ROCK)
@@ -123,7 +137,7 @@ func set_roles_phase():
 	attacker_array = enemy_dice_array
 
 func set_defense_phase():
-	battle_phase = phase_step.PHASE_FIRST
+	battle_phase = phase_step.PHASE_DEFENSE
 	title_type_roll.text = "DEFENSE!"
 	who_type_roll.text = defender_p.get_player_name()
 	does_type_roll.text = " defends"
@@ -142,7 +156,7 @@ func set_defense_phase():
 	lebutton.set_visible(true)
 
 func set_attack_phase():
-	battle_phase = phase_step.PHASE_THIRD
+	battle_phase = phase_step.PHASE_ATTACK
 	title_type_roll.text = "ATTACK!"
 	who_type_roll.text = attacker_p.get_player_name()
 	does_type_roll.text = " attacks"
@@ -157,7 +171,7 @@ func set_attack_phase():
 
 func acept_destiny():
 	print("Restart Stage")
-	battle_phase = phase_step.PHASE_FIRST
+	battle_phase = phase_step.PHASE_DEFENSE
 	result_stage.set_visible(false)
 	defender_p.hide_score()
 	attacker_p.hide_score()
@@ -194,11 +208,11 @@ func conclude_stage():
 	if defender_updated_life <= 0:
 		end_game_opt.lost_option()
 		#end_game_opt.victory_option()
-		battle_phase = phase_step.PHASE_THIRD
+		#battle_phase = phase_step.PHASE_ATTACK
 		print("Attacker Victory")
 		return
 
-	battle_phase = phase_step.PHASE_FIRST
+	battle_phase = phase_step.PHASE_DEFENSE
 	#lebutton.set_visible(true)
 
 
@@ -215,29 +229,42 @@ func rested_dice():
 
 func _on_timer_timeout():
 	match battle_phase:
-		phase_step.PHASE_FIRST:
-			prints(self,"timeout","PHASE_FIRST")
-		phase_step.PHASE_SECOND:
+		phase_step.PHASE_DEFENSE:
+			prints(self,"timeout","PHASE_DEFENSE")
 			rested_dice()
-		phase_step.PHASE_THIRD:
-			prints(self,"timeout","PHASE_THIRD")
-		phase_step.PHASE_FOURTH:
+		phase_step.PHASE_DEFENSE_CHAOS:
+			if dice_rested():
+				#resolve_effects() should resolve dice effects
+				resolve_aberration_dice()
+			else:
+				timer.set_wait_time(2.0)
+				timer.set_one_shot(true)
+				timer.start()	
+
+		phase_step.PHASE_ATTACK:
+			prints(self,"timeout","PHASE_ATTACK")
 			rested_dice()
+		phase_step.PHASE_ATTACK_CHAOS:
+			if dice_rested():
+				#resolve_effects() should resolve dice effects
+				resolve_aberration_dice()
+			else:
+				timer.set_wait_time(2.0)
+				timer.set_one_shot(true)
+				timer.start()	
 		_:
 			prints(self,"timeout","PHASE TOTAL FAIL")
 
 func roll_phase():
 	match battle_phase:
-		phase_step.PHASE_FIRST:
-			prints(self,"roll_phase","PHASE_FIRST")
+		phase_step.PHASE_DEFENSE:
+			prints(self,"roll_phase","PHASE_DEFENSE")
 			lebutton.set_visible(false)
-			battle_phase = phase_step.PHASE_SECOND
 			for dice in defender_array:
 				roll_da_dice(dice)
-		phase_step.PHASE_THIRD:
-			prints(self,"roll_phase","PHASE_THIRD")
+		phase_step.PHASE_ATTACK:
+			prints(self,"roll_phase","PHASE_ATTACK")
 			lebutton.set_visible(false)
-			battle_phase = phase_step.PHASE_FOURTH
 			for dice in attacker_array:
 				roll_da_dice(dice)
 		_:
@@ -249,7 +276,6 @@ func roll_phase():
 
 
 func roll_all():
-
 	for dice in dice_array:
 		dice.visible = true
 		roll_da_dice(dice)
@@ -267,31 +293,67 @@ func dice_rested()->bool:
 		if !dice.is_sleeping():
 			return false
 
+	for dice in chaos_dice_array:
+		if !dice.is_sleeping():
+			return false
 	return true
 
-
-func result_calc_stage():
+func player_dice_sum(player_sum : Node,player_sum_array : Array[Node]) ->int:
 	var score : int = 0
-	for dice in defender_array:
+	for dice in player_sum_array:
+		if dice.is_dice_disabled():
+			prints ( "CONTINUADISIMO")
+			continue
 		prints ( dice.name,": ",dice.get_dice_val().to_int())
-		score += dice.get_dice_val().to_int()
+		if dice.get_dice_val().to_int() != 1:
+			score += dice.get_dice_val().to_int()
+		else:
+			player_sum.add_chaos()
+			dice.dice_disable()
+	return score
 
+func defense_result_calc_stage():
+	var score : int = player_dice_sum(defender_p,defender_array)
 	defender_p.set_score(score)
 	defender_p.set_score_type(score_type.SCORE_DEFENSE)
 	prints("score setted PA", score)
 
-	score = 0
-	for dice in attacker_array:
-		prints ( dice.name,": ",dice.get_dice_val().to_int())
-		score += dice.get_dice_val().to_int()
+	if defender_p.get_aberration():
+		defender_p.remove_chaos_n(3)
+		battle_phase = phase_step.PHASE_DEFENSE_CHAOS
+		prints("LAUNCH ABERRATION!")
 
 	match battle_phase:
-		phase_step.PHASE_SECOND:
+		phase_step.PHASE_DEFENSE:
 			set_attack_phase()
-		phase_step.PHASE_FOURTH:
-			attacker_p.set_score(score)
-			attacker_p.set_score_type(score_type.SCORE_ATTACK)
+		phase_step.PHASE_DEFENSE_CHAOS:
+			chaos_roll_phase()
+
+func attack_result_calc_stage():
+	var score : int = player_dice_sum(defender_p,defender_array)
+	defender_p.set_score(score)
+	
+	score = player_dice_sum(attacker_p,attacker_array)
+	attacker_p.set_score(score)
+	attacker_p.set_score_type(score_type.SCORE_ATTACK)
+
+	if attacker_p.get_aberration():
+		attacker_p.remove_chaos_n(3)
+		battle_phase = phase_step.PHASE_ATTACK_CHAOS
+		prints("LAUNCH ABERRATION!")
+
+	match battle_phase:
+		phase_step.PHASE_ATTACK:
 			conclude_stage()
+		phase_step.PHASE_ATTACK_CHAOS:
+			chaos_roll_phase()
+
+func result_calc_stage():
+	match battle_phase:
+		phase_step.PHASE_DEFENSE:
+			defense_result_calc_stage()
+		phase_step.PHASE_ATTACK:
+			attack_result_calc_stage()
 		_:
 			return
 
@@ -310,3 +372,43 @@ func roll_da_dice_physic(a_dice : RigidBody3D):
 	a_dice.set_freeze_enabled(false)
 	a_dice.set_angular_velocity(rand_ang)
 	a_dice.set_linear_velocity(rand_vel)
+	
+func chaos_roll_phase():
+	roll_da_dice(chaos_dice_array[0])
+	timer.set_wait_time(2.0)
+	timer.set_one_shot(true)
+	timer.start()
+	print("roll chaos")
+
+func resolve_aberration_dice():
+	var afected_p : Node
+	var afected_array : Array[Node]
+	var next_phase : Callable
+
+	match battle_phase:
+		phase_step.PHASE_DEFENSE_CHAOS:
+			print("Aberration result: ", chaos_dice_array[0])
+			afected_p = defender_p
+			afected_array = defender_array
+			next_phase = Callable(self, "set_attack_phase")
+
+		phase_step.PHASE_ATTACK_CHAOS:
+			print("Aberration result: ", chaos_dice_array[0])
+			afected_p = attacker_p
+			afected_array = attacker_array
+			next_phase = Callable(self, "conclude_stage")
+		_:
+			return
+
+	for dice in afected_array:
+		if dice.is_dice_disabled():
+			continue
+		if dice.get_dice_val().to_int() <= chaos_dice_array[0].get_dice_val().to_int():
+			dice.dice_disable()
+
+	chaos_dice_array[0].dice_disable()
+
+	var score : int = player_dice_sum(afected_p,afected_array)
+	afected_p.set_score(score)
+	
+	next_phase.call()

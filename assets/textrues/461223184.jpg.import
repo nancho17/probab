@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bamvfx47v3alf"
-path.s3tc="res://.godot/imported/titleuan.png-7f14f1d0c82b501de588f655196bef04.s3tc.ctex"
+uid="uid://c57yfl0elamtn"
+path.s3tc="res://.godot/imported/461223184.jpg-86894a702bc7b7e0c756c3345f484570.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/img_text/titleuan.png"
-dest_files=["res://.godot/imported/titleuan.png-7f14f1d0c82b501de588f655196bef04.s3tc.ctex"]
+source_file="res://assets/textrues/461223184.jpg"
+dest_files=["res://.godot/imported/461223184.jpg-86894a702bc7b7e0c756c3345f484570.s3tc.ctex"]
 
 [params]
 

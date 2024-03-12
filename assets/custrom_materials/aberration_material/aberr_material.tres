@@ -1,0 +1,25 @@
+[gd_resource type="ShaderMaterial" load_steps=5 format=3 uid="uid://cs8eysbagjtw1"]
+
+[ext_resource type="Shader" path="res://assets/custrom_materials/aberration_material/aberrshader.gdshader" id="1_y3rxx"]
+[ext_resource type="Texture2D" uid="uid://dcq8nusxtagby" path="res://assets/textrues/461223182.jpg" id="2_qojf8"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_slkij"]
+noise_type = 3
+seed = 25455
+frequency = 0.0077
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_cht6w"]
+noise = SubResource("FastNoiseLite_slkij")
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_y3rxx")
+shader_parameter/albedo = Color(1, 1, 1, 0.639216)
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = null
+shader_parameter/brightness = 1.0
+shader_parameter/disp_scale = Vector2(1, 1)
+shader_parameter/strength = 1.0
+shader_parameter/speed = 0.05
+shader_parameter/albedo_texture = ExtResource("2_qojf8")
+shader_parameter/flowMap = SubResource("NoiseTexture2D_cht6w")

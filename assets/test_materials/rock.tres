@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cyvm2mj4ibl0" path="res://assets/test_materials/rock_metal.jpg" id="4"]
 
 [resource]
+albedo_color = Color(0.282353, 0.32549, 0.623529, 1)
 albedo_texture = ExtResource("3")
 metallic = 0.12
 roughness_texture = ExtResource("2")
