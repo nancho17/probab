@@ -1,6 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://clyxdfcrb04nh"]
+[gd_scene load_steps=9 format=3 uid="uid://clyxdfcrb04nh"]
 
-[ext_resource type="Material" uid="uid://d0hcvf010yt7h" path="res://core_battle/dices/seis/attack_number.tres" id="1_4r1hf"]
+[ext_resource type="Script" path="res://core_battle/tokens/hearts.gd" id="1_1wiux"]
+[ext_resource type="Material" uid="uid://dixnip2jhw523" path="res://core_battle/dices/seis/shadow_number.tres" id="1_4hc5n"]
+[ext_resource type="AudioStream" uid="uid://cexlnl60qlsmw" path="res://assets/sounds/tokens/wet-metal-click_92bpm_A#_minor.wav" id="2_y3csi"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_qpq2o"]
 rough = true
@@ -52,12 +54,18 @@ radius = 0.065
 [node name="Heart" type="RigidBody3D"]
 mass = 20.0
 physics_material_override = SubResource("PhysicsMaterial_qpq2o")
+max_contacts_reported = 1
+contact_monitor = true
+script = ExtResource("1_1wiux")
+
+[node name="TokenAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_y3csi")
 
 [node name="Heart_Mesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(25, 0, 0, 0, 25, 0, 0, 0, 25, 0, 0, 0)
 mesh = SubResource("ArrayMesh_ulif1")
 skeleton = NodePath("")
-surface_material_override/0 = ExtResource("1_4r1hf")
+surface_material_override/0 = ExtResource("1_4hc5n")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(-3.03645e-08, 0.694658, -0.71934, -1, -4.37114e-08, 0, -3.14433e-08, 0.71934, 0.694658, 0.05, 0, -0.04)

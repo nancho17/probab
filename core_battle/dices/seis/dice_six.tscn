@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://cueakbdb2j5jq"]
 
-[ext_resource type="ArrayMesh" uid="uid://fpojoop83c87" path="res://core_battle/dices/seis/dice_seus.tres" id="1_av1gr"]
 [ext_resource type="Script" path="res://core_battle/dices/seis/dice_six.gd" id="1_kksjs"]
 [ext_resource type="AudioStream" uid="uid://37onhvx3ipmk" path="res://assets/sounds/dices/drumming-fingers-against-plastic-spin-globe.wav" id="2_2bnjw"]
+[ext_resource type="ArrayMesh" uid="uid://u8ip1agef50g" path="res://core_battle/dices/seis/dice_seis.tres" id="4_65cwc"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_tn33g"]
 rough = true
@@ -24,8 +24,7 @@ stream = ExtResource("2_2bnjw")
 max_polyphony = 10
 
 [node name="DiceMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
-mesh = ExtResource("1_av1gr")
+mesh = ExtResource("4_65cwc")
 skeleton = NodePath("")
 
 [node name="DiceCollision" type="CollisionShape3D" parent="."]

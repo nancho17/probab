@@ -8,10 +8,6 @@ extends RigidBody3D
 @export var dice_material : Material
 @export var dice_numbers_material : Material
 
-
-
-const REDRIVER = preload("res://core_battle/dices/seis/attack_number.tres")
-const GREENLIGHT = preload("res://core_battle/dices/seis/evade_number.tres")
 const dice_max : int = 6
 
 var dice_inital_pos : Vector3
@@ -21,8 +17,7 @@ var self_button : Button
 var	dice_disable_flag : bool
 
 func _ready():
-	set_mode(mode)
-	
+
 	if dice_material != null:
 		set_dice_material(dice_material)
 
@@ -38,12 +33,8 @@ func _ready():
 func set_dice_material(a_material : Material ):
 	dice_mesh.set_surface_override_material(0,a_material)
 
-func set_mode(a_mode : bool ):
-	mode = a_mode
-	if mode:
-		dice_mesh.set_surface_override_material(1,REDRIVER)
-	else:
-		dice_mesh.set_surface_override_material(1,GREENLIGHT)
+func set_dice_number_material(a_material : Material ):
+	dice_mesh.set_surface_override_material(1,a_material)
 
 func get_dice_val() -> String:
 	for ray in rays_array:

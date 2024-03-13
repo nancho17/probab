@@ -1,6 +1,6 @@
 extends MarginContainer
 
-#Left
+#Left 
 @onready var left_name = $InMarginContainer/VBoxContainer/Labels/Left as Label
 @onready var left_score = $InMarginContainer/VBoxContainer/Labels/LeftScore as Label
 @onready var left_symbol = $InMarginContainer/VBoxContainer/Labels/LSymbol as TextureRect

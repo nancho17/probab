@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://cfr4fywmerau0"]
+[gd_scene load_steps=37 format=3 uid="uid://cfr4fywmerau0"]
 
 [ext_resource type="Script" path="res://core_battle/main_battle.gd" id="1_qxja8"]
 [ext_resource type="Texture2D" uid="uid://2s2kjgtcgrid" path="res://assets/icons/circle-heart-svgrepo-com.svg" id="2_26se4"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://core_battle/gui_battle/end_game_opt.gd" id="6_4ghvo"]
 [ext_resource type="Material" uid="uid://b5s7rqy823muv" path="res://assets/custrom_materials/brownleatheer.tres" id="8_n5ruj"]
 [ext_resource type="AudioStream" uid="uid://4duc8akwn08r" path="res://assets/sounds/resslts.wav" id="10_c5a44"]
+[ext_resource type="PackedScene" uid="uid://clyxdfcrb04nh" path="res://core_battle/tokens/hearts.tscn" id="11_6cxql"]
 [ext_resource type="Script" path="res://core_battle/tokens/tokens.gd" id="11_6k37u"]
 [ext_resource type="Script" path="res://core_battle/agents/Chaos.gd" id="12_hcp80"]
 [ext_resource type="Material" uid="uid://cs8eysbagjtw1" path="res://assets/custrom_materials/aberration_material/aberr_material.tres" id="13_6wqg0"]
@@ -356,6 +357,7 @@ grow_horizontal = 2
 grow_vertical = 0
 size_flags_horizontal = 0
 size_flags_vertical = 4
+script = ExtResource("5_dv0co")
 
 [node name="Panel" type="Panel" parent="ChaosPanel"]
 layout_mode = 2
@@ -466,35 +468,35 @@ skeleton = NodePath("../../Separator")
 
 [node name="D6_1" parent="Player/Dices" instance=ExtResource("2_ss0ja")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, 0)
+mode = true
 
 [node name="D6_2" parent="Player/Dices" instance=ExtResource("2_ss0ja")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, 2)
+mode = true
 
 [node name="D6_3" parent="Player/Dices" instance=ExtResource("2_ss0ja")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, -2)
+mode = true
 
 [node name="Tokens" type="Node3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.18592, 0, 3.03546)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.99166)
 script = ExtResource("11_6k37u")
+
+[node name="Heart" parent="Player/Tokens" instance=ExtResource("11_6cxql")]
+transform = Transform3D(-0.902292, 0, -0.431125, 0, 1, 0, 0.431125, 0, -0.902292, -3.52391, 1.68526, -1.39685)
 
 [node name="Enemy" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
 
-[node name="Tokens" type="Node3D" parent="Enemy"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1, -2)
-script = ExtResource("11_6k37u")
-
-[node name="Dices" type="Node3D" parent="Enemy"]
-
-[node name="leseis_1" parent="Enemy/Dices" instance=ExtResource("2_ss0ja")]
+[node name="leseis_1" parent="Enemy" instance=ExtResource("2_ss0ja")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, 0)
 mode = false
 
-[node name="leseis_2" parent="Enemy/Dices" instance=ExtResource("2_ss0ja")]
+[node name="leseis_2" parent="Enemy" instance=ExtResource("2_ss0ja")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, 2)
 mode = false
 
-[node name="leseis_3" parent="Enemy/Dices" instance=ExtResource("2_ss0ja")]
+[node name="leseis_3" parent="Enemy" instance=ExtResource("2_ss0ja")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, -2)
 mode = false
 
@@ -527,6 +529,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.12435, 13.5637)
 script = ExtResource("12_hcp80")
 
 [node name="AberrationDice" parent="Chaos" instance=ExtResource("2_ss0ja")]
+mode = true
 dice_material = ExtResource("13_6wqg0")
 dice_numbers_material = ExtResource("15_x0wxx")
 

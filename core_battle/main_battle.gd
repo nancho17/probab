@@ -23,13 +23,14 @@ extends Node3D
 
 @onready var timer = $Timer
 @onready var player = $Player/Dices as Node
-@onready var enemy = $Enemy as Node
+@onready var enemy = $Enemy/Dices
 @onready var chaos = $Chaos
 
 @onready var player_data = $MainGui/PlayerData
 @onready var enemy_data = $MainGui/EnemyData
 
-@onready var entropy_bar = $MainGui/Entropy/VBoxContainer/MarginContainer/ProgressBar  as TextureProgressBar
+@onready var player_tokens = $Player/Tokens
+@onready var enemy_tokens = $Enemy/Tokens
 
 @onready var left_text_name = $ResultStage/InMarginContainer/VBoxContainer/Labels/Left
 @onready var left_text_score = $ResultStage/InMarginContainer/VBoxContainer/Labels/LeftScore
@@ -39,6 +40,8 @@ extends Node3D
 @onready var right_text_score = $ResultStage/InMarginContainer/VBoxContainer/Labels/RightScore
 @onready var right_score_symbol = $ResultStage/InMarginContainer/VBoxContainer/Labels/RSymbol
 
+const PLAYER_COLOR = preload("res://core_battle/dices/seis/redriver_mat.tres")
+const ENEMY_COLOR = preload("res://core_battle/dices/seis/grinlight_mat.tres")
 
 const ATTACK_ICON = preload("res://assets/icons/crosshair-simple-svgrepo-com.svg")
 const EVADE_ICON = preload("res://assets/icons/dialpad-circle-svgrepo-com.svg")
@@ -72,6 +75,9 @@ var attacker_p : Node
 var defender_array : Array[Node]
 var attacker_array : Array[Node]
 
+var defender_token : Node
+var attacker_token : Node
+
 var physic_array_dice : Array[RigidBody3D]
 
 func _ready():
@@ -94,6 +100,7 @@ func _ready():
 	player_data.set_life_points_value_int(20)
 	enemy_data.set_life_points_value_int(20)
 
+
 	player_data.label_set_name("Nancho!")
 	enemy_data.label_set_name("Enemy Lv 1")
 
@@ -103,15 +110,23 @@ func _ready():
 	enemy_dice_array = enemy.get_children()
 	for e_dice in enemy_dice_array:
 		e_dice.set_dice_material(ROCK)
-
+		e_dice.set_dice_number_material(ENEMY_COLOR)
+		
 	dice_array = player.get_children()
+	for dice in dice_array:
+		dice.set_dice_number_material(PLAYER_COLOR)
+	
+	player_tokens.set_tokens_material(PLAYER_COLOR)
+	for number in range(20):
+		player_tokens.add_life_token()
+
+	enemy_tokens.set_tokens_material(ENEMY_COLOR)
+	for number in range(20):
+		enemy_tokens.add_life_token()
 
 	lebutton.visible = true
-	
-	
 	set_roles_phase()
 	set_defense_phase()
-
 
 func _physics_process(_delta):
 	if  !physic_array_dice.is_empty():
@@ -130,11 +145,17 @@ func swap_roles():
 	defender_array = attacker_array
 	attacker_array = swapper_array
 
+	var swapper_tokens = defender_token
+	defender_token = attacker_token
+	attacker_token = swapper_tokens
+
 func set_roles_phase():
 	defender_p = player_data
 	attacker_p = enemy_data
 	defender_array = dice_array
 	attacker_array = enemy_dice_array
+	defender_token = player_tokens
+	attacker_token = enemy_tokens
 
 func set_defense_phase():
 	battle_phase = phase_step.PHASE_DEFENSE
@@ -183,7 +204,8 @@ func conclude_stage():
 	var defender_updated_life = defender_p.get_life_points_value_int() + delta_life
 	defender_p.set_life_points_value_int(defender_updated_life)
 	negative_val.text = String.num_int64(delta_life)
-
+	defender_token.remove_life_token_n(delta_life)
+	
 	var left_p : Node
 	var right_p : Node
 
@@ -202,16 +224,17 @@ func conclude_stage():
 	right_text_score.text = right_p.get_score_text()
 	right_score_symbol.texture = right_p.get_score_symbol()
 
-	result_stage.set_visible(true)
 	sound_alert.play()
 
-	if defender_updated_life <= 0:
+	if player_data.get_life_points_value_int() <= 0:
 		end_game_opt.lost_option()
-		#end_game_opt.victory_option()
-		#battle_phase = phase_step.PHASE_ATTACK
-		print("Attacker Victory")
 		return
 
+	if enemy_data.get_life_points_value_int() <= 0:
+		end_game_opt.victory_option()
+		return
+
+	result_stage.set_visible(true)
 	battle_phase = phase_step.PHASE_DEFENSE
 	#lebutton.set_visible(true)
 

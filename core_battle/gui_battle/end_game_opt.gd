@@ -25,11 +25,11 @@ func next_enemy_scene():
 	##get_tree().change_scene_to_packed(main_scene)
 
 func victory_option():
-	title.text = "Le victory eeee!"
+	title.text = "Victory!"
 	set_visible(true)
 
 func lost_option():
-	title.text = "Game Over"
+	title.text = "Defeat"
 	next_enemy.	set_visible(false)
 	set_visible(true)
 
